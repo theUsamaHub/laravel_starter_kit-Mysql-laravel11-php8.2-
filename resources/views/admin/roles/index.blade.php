@@ -8,6 +8,36 @@
         </div>
     </x-slot>
 
+    <!-- Discovered Modules -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h6 class="mb-0 fw-semibold"><i class="bi bi-box-seam me-1"></i>{{ __('Discovered Modules') }}</h6>
+        </div>
+        <div class="card-body">
+            <small class="text-muted d-block mb-3">{{ __('Modules are auto-discovered from Admin controllers. Add a new controller to app/Http/Controllers/Admin/ and its permissions appear automatically.') }}</small>
+            <div class="row g-2">
+                @foreach ($modules as $slug => $module)
+                    <div class="col-md-4 col-lg-3">
+                        <div class="card border h-100">
+                            <div class="card-body p-3">
+                                <div class="fw-semibold mb-1">{{ $module['name'] }}</div>
+                                <div class="d-flex flex-wrap gap-1">
+                                    @foreach ($module['capabilities'] as $cap)
+                                        <span class="badge bg-light text-dark">{{ $cap }}</span>
+                                    @endforeach
+                                </div>
+                                <div class="text-muted mt-1" style="font-size:0.7rem;">
+                                    <code>{{ class_basename($module['controller']) }}</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <!-- Roles Table -->
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -28,11 +58,20 @@
                                 <td><code>{{ $role->slug }}</code></td>
                                 <td>{{ $role->users_count }}</td>
                                 <td>
-                                    @foreach (array_slice($role->permissions ?? [], 0, 3) as $perm)
-                                        <span class="badge bg-light text-dark">{{ $perm }}</span>
-                                    @endforeach
-                                    @if (count($role->permissions ?? []) > 3)
-                                        <span class="badge bg-secondary">+{{ count($role->permissions) - 3 }} more</span>
+                                    @php $perms = $role->permissions ?? []; @endphp
+                                    @if (count($perms) > 0)
+                                        <span class="badge bg-success">{{ count($perms) }} {{ __('permissions') }}</span>
+                                        @if (count($perms) > 3)
+                                            <small class="text-muted ms-1" style="font-size:0.7rem;">
+                                                {{ implode(', ', array_slice($perms, 0, 3)) }}...
+                                            </small>
+                                        @else
+                                            <small class="text-muted ms-1" style="font-size:0.7rem;">
+                                                {{ implode(', ', $perms) }}
+                                            </small>
+                                        @endif
+                                    @else
+                                        <span class="badge bg-secondary">{{ __('No permissions') }}</span>
                                     @endif
                                 </td>
                                 <td class="text-end">

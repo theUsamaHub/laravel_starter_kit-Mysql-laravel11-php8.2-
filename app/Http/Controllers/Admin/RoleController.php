@@ -4,42 +4,25 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
+use App\Services\ModuleRegistry;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class RoleController extends Controller
 {
-    public const AVAILABLE_PERMISSIONS = [
-        'users.view' => 'View Users',
-        'users.create' => 'Create Users',
-        'users.edit' => 'Edit Users',
-        'users.delete' => 'Delete Users',
-        'categories.view' => 'View Categories',
-        'categories.create' => 'Create Categories',
-        'categories.edit' => 'Edit Categories',
-        'categories.delete' => 'Delete Categories',
-        'contacts.view' => 'View Contacts',
-        'contacts.delete' => 'Delete Contacts',
-        'settings.view' => 'View Settings',
-        'settings.edit' => 'Edit Settings',
-        'media.view' => 'View Media',
-        'media.upload' => 'Upload Media',
-        'media.delete' => 'Delete Media',
-        'roles.view' => 'View Roles',
-        'roles.edit' => 'Edit Roles',
-    ];
-
     public function index(): View
     {
         $roles = Role::withCount('users')->get();
-        return view('admin.roles.index', compact('roles'));
+        $modules = ModuleRegistry::discoverModules();
+
+        return view('admin.roles.index', compact('roles', 'modules'));
     }
 
     public function create(): View
     {
         return view('admin.roles.create', [
-            'permissions' => self::AVAILABLE_PERMISSIONS,
+            'permissions' => ModuleRegistry::getGroupedPermissions(),
         ]);
     }
 
@@ -67,7 +50,7 @@ class RoleController extends Controller
     {
         return view('admin.roles.edit', [
             'role' => $role,
-            'permissions' => self::AVAILABLE_PERMISSIONS,
+            'permissions' => ModuleRegistry::getGroupedPermissions(),
         ]);
     }
 

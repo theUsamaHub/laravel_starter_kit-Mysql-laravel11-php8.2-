@@ -3,20 +3,15 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
+use App\Services\ModuleRegistry;
 use Illuminate\Database\Seeder;
 
 class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        $allPermissions = [
-            'users.view', 'users.create', 'users.edit', 'users.delete',
-            'categories.view', 'categories.create', 'categories.edit', 'categories.delete',
-            'contacts.view', 'contacts.delete',
-            'settings.view', 'settings.edit',
-            'media.view', 'media.upload', 'media.delete',
-            'roles.view', 'roles.edit',
-        ];
+        // Auto-generate permissions from discovered modules
+        $allPermissions = array_keys(ModuleRegistry::generatePermissions());
 
         Role::updateOrCreate(
             ['slug' => 'admin'],
