@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\User;
+use App\Notifications\ContactFormNotification;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 
 class ContactController extends Controller
 {
@@ -19,8 +20,18 @@ class ContactController extends Controller
         ]);
 
         $validated['ip_address'] = $request->ip();
+        $contact = Contact::create($validated);
 
-        Contact::create($validated);
+        // Notify all admin users
+        $admins = User::whereHas('roles', fn($q) => $q->where('slug', 'admin'))->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new ContactFormNotification(
+                $validated['name'],
+                $validated['email'],
+                $validated['subject'] ?? 'No Subject',
+                $validated['message']
+            ));
+        }
 
         return back()->with('success', 'Thank you for your message! We will get back to you soon.');
     }

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Traits\HasMedia;
+use App\Traits\HasTags;
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,12 +13,13 @@ use Illuminate\Support\Str;
 
 class Category extends Model
 {
-    use HasFactory, SoftDeletes, HasMedia;
+    use HasFactory, SoftDeletes, HasMedia, HasTags, LogsActivity;
 
     protected $fillable = [
         'name',
         'slug',
         'description',
+        'body',
         'image',
         'is_active',
         'sort_order',

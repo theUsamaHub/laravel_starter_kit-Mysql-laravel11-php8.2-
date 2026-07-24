@@ -9,16 +9,31 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        $roles = [
-            ['name' => 'Admin', 'slug' => 'admin', 'description' => 'Full system access. Can manage all resources, users, and settings.'],
-            ['name' => 'User', 'slug' => 'user', 'description' => 'Standard user access. Can view and manage own profile and assigned resources.'],
+        $allPermissions = [
+            'users.view', 'users.create', 'users.edit', 'users.delete',
+            'categories.view', 'categories.create', 'categories.edit', 'categories.delete',
+            'contacts.view', 'contacts.delete',
+            'settings.view', 'settings.edit',
+            'media.view', 'media.upload', 'media.delete',
+            'roles.view', 'roles.edit',
         ];
 
-        foreach ($roles as $role) {
-            Role::updateOrCreate(
-                ['slug' => $role['slug']],
-                $role
-            );
-        }
+        Role::updateOrCreate(
+            ['slug' => 'admin'],
+            [
+                'name' => 'Admin',
+                'description' => 'Full system access. Can manage all resources, users, and settings.',
+                'permissions' => $allPermissions,
+            ]
+        );
+
+        Role::updateOrCreate(
+            ['slug' => 'user'],
+            [
+                'name' => 'User',
+                'description' => 'Standard user access. Can view and manage own profile.',
+                'permissions' => ['categories.view'],
+            ]
+        );
     }
 }

@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+
+class ContactFormNotification extends Notification implements ShouldQueue
+{
+    use Queueable;
+
+    public function __construct(
+        public string $name,
+        public string $email,
+        public string $subject,
+        public string $message
+    ) {}
+
+    public function via(object $notifiable): array
+    {
+        return ['mail'];
+    }
+
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+            ->subject('New Contact Message: ' . $this->subject)
+            ->greeting('New contact form submission')
+            ->line('From: ' . $this->name . ' (' . $this->email . ')')
+            ->line('Subject: ' . $this->subject)
+            ->line('Message:')
+            ->line($this->message)
+            ->action('View Messages', route('admin.contacts.index'));
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        return [
+            'message' => "New contact from {$this->name}: {$this->subject}",
+            'action' => route('admin.contacts.index'),
+        ];
+    }
+}
