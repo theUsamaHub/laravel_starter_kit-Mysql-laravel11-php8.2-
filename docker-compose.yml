@@ -1,177 +1,49 @@
-# ── Docker Compose - Laravel Starter Kit ──
-# Usage: docker compose up -d
-# First run: docker compose exec app php artisan migrate:fresh --seed
-
 services:
-  # ── PHP Application ──
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: lsk-app
-    restart: unless-stopped
-    working_dir: /var/www/html
+    build: .
+    ports:
+      - "8000:8000"
     environment:
-      - APP_ENV=local
-      - APP_DEBUG=true
       - DB_CONNECTION=pgsql
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DB_DATABASE=${DB_DATABASE:-laravel_starter}
-      - DB_USERNAME=${DB_USERNAME:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - DB_DATABASE=laravel_starter
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=secret
       - REDIS_HOST=redis
-      - SESSION_DRIVER=redis
-      - CACHE_STORE=redis
-      - QUEUE_CONNECTION=redis
     volumes:
       - .:/var/www/html
-      - storage:/var/www/html/storage
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-    networks:
-      - lsk-network
 
-  # ── Nginx Web Server ──
-  nginx:
-    image: nginx:alpine
-    container_name: lsk-nginx
-    restart: unless-stopped
-    ports:
-      - "${APP_PORT:-8000}:80"
-    volumes:
-      - .:/var/www/html
-      - storage:/var/www/html/storage
-      - ./docker/nginx/app.conf:/etc/nginx/http.d/default.conf
-    depends_on:
-      - app
-    networks:
-      - lsk-network
-
-  # ── PostgreSQL Database ──
   postgres:
-    image: postgres:16-alpine
-    container_name: lsk-postgres
-    restart: unless-stopped
+    image: postgres:18-alpine
     environment:
-      - POSTGRES_DB=${DB_DATABASE:-laravel_starter}
-      - POSTGRES_USER=${DB_USERNAME:-postgres}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:-secret}
+      POSTGRES_DB: laravel_starter
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - lsk-network
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
-  # ── Redis (Cache, Queue, Sessions) ──
   redis:
     image: redis:7-alpine
-    container_name: lsk-redis
-    restart: unless-stopped
     ports:
-      - "${REDIS_PORT:-6379}:6379"
-    volumes:
-      - redis_data:/data
+      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - lsk-network
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
-  # ── Node (Vite Dev Server) ──
-  node:
-    image: node:20-alpine
-    container_name: lsk-node
-    working_dir: /app
-    volumes:
-      - .:/app
-    command: sh -c "npm install --ignore-scripts && npm run dev -- --host"
-    networks:
-      - lsk-network
-
-  # ── Queue Worker ──
-  queue:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: lsk-queue
-    restart: unless-stopped
-    working_dir: /var/www/html
-    environment:
-      - APP_ENV=local
-      - APP_DEBUG=true
-      - DB_CONNECTION=pgsql
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_DATABASE=${DB_DATABASE:-laravel_starter}
-      - DB_USERNAME=${DB_USERNAME:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-secret}
-      - REDIS_HOST=redis
-      - SESSION_DRIVER=redis
-      - CACHE_STORE=redis
-      - QUEUE_CONNECTION=redis
-    volumes:
-      - .:/var/www/html
-      - storage:/var/www/html/storage
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    command: >
-      sh -c "php artisan queue:work --verbose --tries=3 --timeout=90"
-    networks:
-      - lsk-network
-
-  # ── Scheduler ──
-  scheduler:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: lsk-scheduler
-    restart: unless-stopped
-    working_dir: /var/www/html
-    environment:
-      - APP_ENV=local
-      - APP_DEBUG=true
-      - DB_CONNECTION=pgsql
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_DATABASE=${DB_DATABASE:-laravel_starter}
-      - DB_USERNAME=${DB_USERNAME:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-secret}
-      - REDIS_HOST=redis
-    volumes:
-      - .:/var/www/html
-      - storage:/var/www/html/storage
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    command: >
-      sh -c "while true; do php artisan schedule:run --verbose --no-interaction & sleep 60; done"
-    networks:
-      - lsk-network
-
-# ── Volumes ──
 volumes:
-  storage:
-  postgres_data:
-  redis_data:
-
-# ── Networks ──
-networks:
-  lsk-network:
-    driver: bridge
+  pgdata:
