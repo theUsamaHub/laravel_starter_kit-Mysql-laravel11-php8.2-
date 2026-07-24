@@ -58,6 +58,24 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.media.*') ? 'active' : '' }}" href="{{ route('admin.media.index') }}">
+                        <i class="bi bi-folder"></i>
+                        {{ __('Media') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.validation-rules.*') ? 'active' : '' }}" href="{{ route('admin.validation-rules.index') }}">
+                        <i class="bi bi-shield-check"></i>
+                        {{ __('Validation') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
+                        <i class="bi bi-gear"></i>
+                        {{ __('Settings') }}
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.maintenance.*') ? 'active' : '' }}" href="{{ route('admin.maintenance.index') }}">
                         <i class="bi bi-tools"></i>
                         {{ __('Maintenance') }}

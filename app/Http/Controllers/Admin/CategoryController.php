@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Services\CategoryService;
+use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,8 @@ use Illuminate\View\View;
 class CategoryController extends Controller
 {
     public function __construct(
-        private readonly CategoryService $categoryService
+        private readonly CategoryService $categoryService,
+        private readonly FileUploadService $fileService
     ) {}
 
     public function index(Request $request): View
@@ -33,7 +35,22 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request): RedirectResponse
     {
-        $this->categoryService->create($request->validated());
+        $category = $this->categoryService->create($request->validated());
+
+        // Handle main image upload
+        if ($request->hasFile('image')) {
+            $media = $category->addMediaFromRequest('image');
+            if ($media) {
+                $category->update(['image' => $media->path]);
+            }
+        }
+
+        // Handle multiple attachments
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $category->addMedia($file, 'uploads/categories');
+            }
+        }
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category created successfully.');
@@ -41,12 +58,13 @@ class CategoryController extends Controller
 
     public function show(Category $category): View
     {
-        $category->load(['createdBy', 'updatedBy']);
+        $category->load(['createdBy', 'updatedBy', 'media']);
         return view('admin.categories.show', compact('category'));
     }
 
     public function edit(Category $category): View
     {
+        $category->load('media');
         return view('admin.categories.edit', compact('category'));
     }
 
@@ -54,12 +72,41 @@ class CategoryController extends Controller
     {
         $this->categoryService->update($category, $request->validated());
 
+        // Handle main image update
+        if ($request->boolean('remove_image') && $category->image) {
+            $existing = $category->getFirstMedia();
+            if ($existing) {
+                $category->removeMedia($existing);
+            }
+            $category->update(['image' => null]);
+        }
+
+        if ($request->hasFile('image')) {
+            // Remove old main image if exists
+            $existing = $category->getFirstMedia();
+            if ($existing) {
+                $category->removeMedia($existing);
+            }
+            $media = $category->addMediaFromRequest('image');
+            if ($media) {
+                $category->update(['image' => $media->path]);
+            }
+        }
+
+        // Handle additional attachments
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $category->addMedia($file, 'uploads/categories');
+            }
+        }
+
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category updated successfully.');
     }
 
     public function destroy(Category $category): RedirectResponse
     {
+        $category->clearMedia();
         $this->categoryService->delete($category);
 
         return redirect()->route('admin.categories.index')

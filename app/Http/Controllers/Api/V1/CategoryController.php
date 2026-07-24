@@ -31,14 +31,29 @@ class CategoryController extends Controller
     {
         $category = $this->categoryService->create($request->validated());
 
-        return (new CategoryResource($category->fresh(['createdBy', 'updatedBy'])))
+        // Handle main image
+        if ($request->hasFile('image')) {
+            $media = $category->addMediaFromRequest('image');
+            if ($media) {
+                $category->update(['image' => $media->path]);
+            }
+        }
+
+        // Handle attachments
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $category->addMedia($file, 'uploads/categories');
+            }
+        }
+
+        return (new CategoryResource($category->fresh(['createdBy', 'updatedBy', 'media'])))
             ->response()
             ->setStatusCode(201);
     }
 
     public function show(Category $category): CategoryResource
     {
-        $category->load(['createdBy', 'updatedBy']);
+        $category->load(['createdBy', 'updatedBy', 'media']);
         return new CategoryResource($category);
     }
 
@@ -46,13 +61,41 @@ class CategoryController extends Controller
     {
         $category = $this->categoryService->update($category, $request->validated());
 
-        return (new CategoryResource($category->fresh(['createdBy', 'updatedBy'])))
+        // Handle main image
+        if ($request->boolean('remove_image') && $category->image) {
+            $existing = $category->getFirstMedia();
+            if ($existing) {
+                $category->removeMedia($existing);
+            }
+            $category->update(['image' => null]);
+        }
+
+        if ($request->hasFile('image')) {
+            $existing = $category->getFirstMedia();
+            if ($existing) {
+                $category->removeMedia($existing);
+            }
+            $media = $category->addMediaFromRequest('image');
+            if ($media) {
+                $category->update(['image' => $media->path]);
+            }
+        }
+
+        // Handle attachments
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $category->addMedia($file, 'uploads/categories');
+            }
+        }
+
+        return (new CategoryResource($category->fresh(['createdBy', 'updatedBy', 'media'])))
             ->response()
             ->setStatusCode(200);
     }
 
     public function destroy(Category $category): JsonResponse
     {
+        $category->clearMedia();
         $this->categoryService->delete($category);
 
         return response()->json([

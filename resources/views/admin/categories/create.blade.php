@@ -12,7 +12,7 @@
         <div class="col-lg-8">
             <div class="card">
                 <div class="card-body p-4">
-                    <form action="{{ route('admin.categories.store') }}" method="POST">
+                    <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
@@ -32,6 +32,24 @@
                             <x-input-label for="description" :value="__('Description')" />
                             <textarea id="description" name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
                             <x-input-error :messages="$errors->get('description')" class="mt-1" />
+                        </div>
+
+                        <div class="mb-3">
+                            <x-input-label for="image" :value="__('Category Image')" />
+                            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="image" accept=".jpg,.jpeg,.png,.gif,.webp">
+                            <small class="text-muted">{{ __('Accepted: JPG, PNG, GIF, WebP (max 5MB)') }}</small>
+                            @error('image')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div id="image-preview" class="mt-2" style="display: none;">
+                                <img id="preview-img" src="" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <x-input-label :value="__('Attachments')" />
+                            <input type="file" class="form-control" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.csv">
+                            <small class="text-muted">{{ __('Upload multiple files (images, PDFs, Excel). Max 10MB each.') }}</small>
                         </div>
 
                         <div class="row mb-3">
@@ -66,10 +84,30 @@
                         <li class="mb-2">{{ __('Keep category names short and descriptive.') }}</li>
                         <li class="mb-2">{{ __('Slugs are used in URLs and should be lowercase.') }}</li>
                         <li class="mb-2">{{ __('Sort order determines display priority (0 = first).') }}</li>
-                        <li class="mb-0">{{ __('Inactive categories are hidden from public views.') }}</li>
+                        <li class="mb-2">{{ __('Category images appear in listings and detail views.') }}</li>
+                        <li class="mb-0">{{ __('Attachments can be PDFs, Excel files, or additional images.') }}</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.getElementById('image').addEventListener('change', function(e) {
+            const preview = document.getElementById('image-preview');
+            const img = document.getElementById('preview-img');
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    img.src = ev.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+    </script>
+    @endpush
 </x-app-layout>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,7 +17,8 @@ class CategoryRequest extends FormRequest
     {
         $categoryId = $this->route('category')?->id;
 
-        return [
+        // Start with hardcoded base rules
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'slug' => [
                 'nullable',
@@ -27,18 +29,45 @@ class CategoryRequest extends FormRequest
                 Rule::unique('categories', 'slug')->ignore($categoryId),
             ],
             'description' => ['nullable', 'string', 'max:1000'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,gif,webp', 'max:5120'],
+            'attachments' => ['nullable', 'array', 'max:10'],
+            'attachments.*' => ['file', 'mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,xls,xlsx,csv', 'max:10240'],
             'is_active' => ['boolean'],
             'sort_order' => ['integer', 'min:0'],
+            'remove_image' => ['nullable', 'boolean'],
         ];
+
+        // Merge with dynamic rules from database if they exist
+        $dynamicRules = ValidationRule::getRules('category');
+        if (!empty($dynamicRules)) {
+            foreach ($dynamicRules as $field => $fieldRules) {
+                if (isset($rules[$field])) {
+                    $rules[$field] = array_merge($rules[$field], $fieldRules);
+                } else {
+                    $rules[$field] = $fieldRules;
+                }
+            }
+        }
+
+        return $rules;
     }
 
     public function messages(): array
     {
-        return [
+        $baseMessages = [
             'name.required' => 'Please enter a category name.',
             'name.max' => 'Category name cannot exceed 255 characters.',
             'slug.unique' => 'This slug is already taken.',
             'sort_order.integer' => 'Sort order must be a whole number.',
+            'image.image' => 'The file must be an image.',
+            'image.mimes' => 'The image must be a JPG, PNG, GIF, or WebP file.',
+            'image.max' => 'The image must not be larger than 5MB.',
+            'attachments.*.mimes' => 'The file must be a supported type (JPG, PNG, PDF, Excel, CSV).',
+            'attachments.*.max' => 'Each file must not be larger than 10MB.',
         ];
+
+        // Merge with dynamic messages from database
+        $dynamicMessages = ValidationRule::getMessages('category');
+        return array_merge($baseMessages, $dynamicMessages);
     }
 }

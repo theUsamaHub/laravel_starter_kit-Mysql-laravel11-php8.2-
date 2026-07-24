@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
         // Seed categories
         $this->call(CategorySeeder::class);
 
+        // Seed settings and validation rules
+        $this->call(SettingsSeeder::class);
+
         // Create admin user
         $admin = User::updateOrCreate(
             ['email' => 'admin@example.com'],
