@@ -16,6 +16,6 @@ class Role extends Model
 
     public function hasUser(User $user): bool
     {
-        return $this->users()->where('user_id', $user->id)->exists();
+        return $this->users()->where('users.id', $user->id)->exists();
     }
 }

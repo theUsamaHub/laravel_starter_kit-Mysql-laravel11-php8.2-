@@ -22,6 +22,8 @@ class CategoryRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:255',
+                'min:1',
+                'alpha_dash',
                 Rule::unique('categories', 'slug')->ignore($categoryId),
             ],
             'description' => ['nullable', 'string', 'max:1000'],

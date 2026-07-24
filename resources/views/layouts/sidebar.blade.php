@@ -30,7 +30,7 @@
                     <small class="text-uppercase text-secondary px-3 fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05em;">{{ __('Administration') }}</small>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('admin.*') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                    <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                         <i class="bi bi-speedometer2"></i>
                         {{ __('Admin Dashboard') }}
                     </a>
@@ -39,6 +39,31 @@
                     <a class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" href="{{ route('admin.categories.index') }}">
                         <i class="bi bi-tags"></i>
                         {{ __('Categories') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                        <i class="bi bi-people"></i>
+                        {{ __('Users') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}" href="{{ route('admin.contacts.index') }}">
+                        <i class="bi bi-envelope"></i>
+                        {{ __('Contacts') }}
+                        @php $newContacts = \App\Models\Contact::where('status', 'new')->count(); @endphp
+                        @if ($newContacts > 0)
+                            <span class="badge bg-danger ms-1">{{ $newContacts }}</span>
+                        @endif
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.maintenance.*') ? 'active' : '' }}" href="{{ route('admin.maintenance.index') }}">
+                        <i class="bi bi-tools"></i>
+                        {{ __('Maintenance') }}
+                        @if (\Illuminate\Support\Facades\Cache::get('maintenance_mode', false))
+                            <span class="badge bg-warning ms-1">{{ __('ON') }}</span>
+                        @endif
                     </a>
                 </li>
             @endif

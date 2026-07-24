@@ -48,14 +48,14 @@ class Category extends Model
             if (empty($category->slug)) {
                 $category->slug = Str::slug($category->name);
             }
-            $category->created_by = auth()->id();
+            $category->created_by = auth()->id() ?? $category->created_by;
         });
 
         static::updating(function (Category $category) {
-            if ($category->isDirty('name') && empty($category->getOriginal('slug'))) {
+            if ($category->isDirty('name') && !$category->slug) {
                 $category->slug = Str::slug($category->name);
             }
-            $category->updated_by = auth()->id();
+            $category->updated_by = auth()->id() ?? $category->updated_by;
         });
     }
 }

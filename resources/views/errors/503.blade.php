@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>403 - {{ config('app.name', 'Laravel Starter Kit') }}</title>
+        <title>503 - {{ config('app.name', 'Laravel Starter Kit') }}</title>
         @vite(['resources/css/app.scss', 'resources/js/app.js'])
         <style>
             .error-page {
@@ -11,7 +11,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
                 color: #fff;
             }
             .error-card {
@@ -75,30 +75,40 @@
             .error-links a:hover {
                 color: #fff;
             }
+            .countdown {
+                font-size: 0.875rem;
+                opacity: 0.7;
+                margin-top: 1rem;
+            }
         </style>
     </head>
     <body>
         <div class="error-page">
             <div class="error-card">
-                <div class="error-code">403</div>
+                <div class="error-code">503</div>
                 <div class="error-icon">
-                    <i class="bi bi-shield-lock"></i>
+                    <i class="bi bi-tools"></i>
                 </div>
-                <h1 class="error-title">{{ __('Access Denied') }}</h1>
-                <p class="error-message">{{ __('You do not have permission to access this page. If you believe this is an error, please contact your administrator.') }}</p>
+                <h1 class="error-title">{{ __('Under Maintenance') }}</h1>
+                <p class="error-message">{{ __('We are currently performing scheduled maintenance. We will be back shortly. Thank you for your patience.') }}</p>
                 <a href="{{ url('/') }}" class="error-btn">
-                    <i class="bi bi-house"></i> {{ __('Go Home') }}
+                    <i class="bi bi-arrow-clockwise"></i> {{ __('Try Again') }}
                 </a>
-                <div class="error-links">
-                    <a href="javascript:history.back()">{{ __('Go Back') }}</a>
-                    @auth
-                        <a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
-                    @endauth
-                    @guest
-                        <a href="{{ route('login') }}">{{ __('Login') }}</a>
-                    @endguest
-                </div>
+                <div class="countdown" id="countdown"></div>
             </div>
         </div>
+        <script>
+            // Auto-refresh every 30 seconds
+            let seconds = 30;
+            const el = document.getElementById('countdown');
+            const timer = setInterval(() => {
+                seconds--;
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    location.reload();
+                }
+                el.textContent = 'Page refreshes in ' + seconds + 's';
+            }, 1000);
+        </script>
     </body>
 </html>

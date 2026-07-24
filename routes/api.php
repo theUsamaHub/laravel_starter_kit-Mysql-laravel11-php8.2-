@@ -47,7 +47,21 @@ Route::prefix('v1')->group(function () {
         Route::put('/profile', [\App\Http\Controllers\Api\V1\ProfileController::class, 'update'])
             ->name('api.v1.profile.update');
 
-        // Categories CRUD
-        Route::apiResource('categories', \App\Http\Controllers\Api\V1\CategoryController::class);
+        // Categories CRUD (admin only)
+        Route::middleware('role:admin')->group(function () {
+            Route::apiResource('categories', \App\Http\Controllers\Api\V1\CategoryController::class);
+        });
+
+        // User Management (admin only)
+        Route::middleware('role:admin')->group(function () {
+            Route::get('/users', [\App\Http\Controllers\Api\V1\UserController::class, 'index'])
+                ->name('api.v1.users.index');
+            Route::get('/users/{user}', [\App\Http\Controllers\Api\V1\UserController::class, 'show'])
+                ->name('api.v1.users.show');
+            Route::put('/users/{user}', [\App\Http\Controllers\Api\V1\UserController::class, 'update'])
+                ->name('api.v1.users.update');
+            Route::delete('/users/{user}', [\App\Http\Controllers\Api\V1\UserController::class, 'destroy'])
+                ->name('api.v1.users.destroy');
+        });
     });
 });

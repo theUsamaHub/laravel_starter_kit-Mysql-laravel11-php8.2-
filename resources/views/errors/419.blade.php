@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>403 - {{ config('app.name', 'Laravel Starter Kit') }}</title>
+        <title>419 - {{ config('app.name', 'Laravel Starter Kit') }}</title>
         @vite(['resources/css/app.scss', 'resources/js/app.js'])
         <style>
             .error-page {
@@ -11,7 +11,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
                 color: #fff;
             }
             .error-card {
@@ -80,23 +80,17 @@
     <body>
         <div class="error-page">
             <div class="error-card">
-                <div class="error-code">403</div>
+                <div class="error-code">419</div>
                 <div class="error-icon">
-                    <i class="bi bi-shield-lock"></i>
+                    <i class="bi bi-clock-history"></i>
                 </div>
-                <h1 class="error-title">{{ __('Access Denied') }}</h1>
-                <p class="error-message">{{ __('You do not have permission to access this page. If you believe this is an error, please contact your administrator.') }}</p>
+                <h1 class="error-title">{{ __('Page Expired') }}</h1>
+                <p class="error-message">{{ __('This page has expired due to inactivity. Please refresh and try again.') }}</p>
                 <a href="{{ url('/') }}" class="error-btn">
-                    <i class="bi bi-house"></i> {{ __('Go Home') }}
+                    <i class="bi bi-arrow-clockwise"></i> {{ __('Refresh') }}
                 </a>
                 <div class="error-links">
-                    <a href="javascript:history.back()">{{ __('Go Back') }}</a>
-                    @auth
-                        <a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
-                    @endauth
-                    @guest
-                        <a href="{{ route('login') }}">{{ __('Login') }}</a>
-                    @endguest
+                    <a href="javascript:location.reload()">{{ __('Refresh Page') }}</a>
                 </div>
             </div>
         </div>

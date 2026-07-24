@@ -1,4 +1,9 @@
+import Alpine from 'alpinejs';
 import * as bootstrap from 'bootstrap';
+
+// Make Alpine available globally
+window.Alpine = Alpine;
+Alpine.start();
 
 // Bootstrap Toast auto-dismiss
 document.addEventListener('DOMContentLoaded', function () {

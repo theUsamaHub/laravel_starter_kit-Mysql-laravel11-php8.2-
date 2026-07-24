@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+// Contact form
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // Dashboard (authenticated users)
 Route::get('/dashboard', function () {

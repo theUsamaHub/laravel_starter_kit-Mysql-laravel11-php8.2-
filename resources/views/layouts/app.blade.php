@@ -26,6 +26,8 @@
 
                 <!-- Page Content -->
                 <main class="p-4">
+                    <x-flash-message />
+
                     @isset($header)
                         <div class="mb-4">
                             {{ $header }}
