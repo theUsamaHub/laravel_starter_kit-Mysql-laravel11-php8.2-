@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LogViewerController extends Controller
 {
@@ -15,8 +15,8 @@ class LogViewerController extends Controller
         $logs = [];
 
         if (File::exists($logPath)) {
-            $content = File::tail($logPath, 200);
-            $logs = array_reverse(array_filter(explode("\n", $content)));
+            $lines = static::tailFile($logPath, 200);
+            $logs = array_reverse(array_filter($lines));
         }
 
         return view('admin.logs.index', compact('logs'));
@@ -32,9 +32,27 @@ class LogViewerController extends Controller
         return back()->with('success', 'Logs cleared successfully.');
     }
 
-    public function download(): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function download(): StreamedResponse
     {
         $logPath = storage_path('logs/laravel.log');
         return response()->download($logPath, 'laravel-' . now()->format('Y-m-d-His') . '.log');
+    }
+
+    private static function tailFile(string $path, int $lines): array
+    {
+        $file = new \SplFileObject($path, 'r');
+        $file->seek(PHP_INT_MAX);
+        $totalLines = $file->key();
+
+        $startLine = max(0, $totalLines - $lines);
+        $file->seek($startLine);
+
+        $result = [];
+        while ($file->valid() && $file->key() < $totalLines) {
+            $result[] = rtrim($file->current(), "\r\n");
+            $file->next();
+        }
+
+        return $result;
     }
 }

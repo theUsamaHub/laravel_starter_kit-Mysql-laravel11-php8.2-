@@ -64,7 +64,7 @@ class BackupController extends Controller
         return back()->with('success', "Backup created: {$filename}");
     }
 
-    public function download(string $filename): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function download(string $filename): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
         $filepath = storage_path("app/backups/{$filename}");
 

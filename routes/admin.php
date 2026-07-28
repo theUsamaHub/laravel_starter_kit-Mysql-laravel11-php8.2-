@@ -15,11 +15,6 @@ Route::prefix('admin')
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->only(['index', 'show', 'edit', 'update', 'destroy']);
         Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class)->only(['index', 'show', 'destroy']);
 
-        // Maintenance
-        Route::get('/maintenance', [\App\Http\Controllers\Admin\MaintenanceController::class, 'index'])->name('maintenance.index');
-        Route::post('/maintenance/toggle', [\App\Http\Controllers\Admin\MaintenanceController::class, 'toggle'])->name('maintenance.toggle');
-        Route::put('/maintenance/message', [\App\Http\Controllers\Admin\MaintenanceController::class, 'updateMessage'])->name('maintenance.message');
-
         // Media
         Route::get('/media', [\App\Http\Controllers\Admin\MediaController::class, 'index'])->name('media.index');
         Route::post('/media', [\App\Http\Controllers\Admin\MediaController::class, 'store'])->name('media.store');

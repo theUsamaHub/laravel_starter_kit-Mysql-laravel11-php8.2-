@@ -28,7 +28,6 @@ class ModuleRegistry
 
             // Skip non-CRUD controllers
             $skipControllers = [
-                'MaintenanceController',
                 'LogViewerController',
                 'BackupController',
                 'ActivityLogController',
@@ -76,13 +75,6 @@ class ModuleRegistry
     private static function registerSpecialController(string $controllerName): ?array
     {
         return match ($controllerName) {
-            'MaintenanceController' => [
-                'slug' => 'maintenance',
-                'name' => 'Maintenance',
-                'controller' => "App\\Http\\Controllers\\Admin\\{$controllerName}",
-                'capabilities' => ['view', 'toggle'],
-                'route_prefix' => 'admin.maintenance',
-            ],
             'LogViewerController' => [
                 'slug' => 'logs',
                 'name' => 'Logs',

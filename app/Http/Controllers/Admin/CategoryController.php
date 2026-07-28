@@ -35,7 +35,8 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request): RedirectResponse
     {
-        $category = $this->categoryService->create($request->validated());
+        $data = collect($request->validated())->except(['image', 'attachments', 'remove_image'])->toArray();
+        $category = $this->categoryService->create($data);
 
         // Handle main image upload
         if ($request->hasFile('image')) {
@@ -48,7 +49,7 @@ class CategoryController extends Controller
         // Handle multiple attachments
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
-                $category->addMedia($file, 'uploads/categories');
+                $category->addMedia($file);
             }
         }
 
@@ -70,7 +71,8 @@ class CategoryController extends Controller
 
     public function update(CategoryRequest $request, Category $category): RedirectResponse
     {
-        $this->categoryService->update($category, $request->validated());
+        $data = collect($request->validated())->except(['image', 'attachments', 'remove_image'])->toArray();
+        $this->categoryService->update($category, $data);
 
         // Handle main image update
         if ($request->boolean('remove_image') && $category->image) {
@@ -96,7 +98,7 @@ class CategoryController extends Controller
         // Handle additional attachments
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
-                $category->addMedia($file, 'uploads/categories');
+                $category->addMedia($file);
             }
         }
 
