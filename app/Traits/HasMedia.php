@@ -16,7 +16,7 @@ trait HasMedia
 
     public function addMedia(UploadedFile $file, ?string $disk = null): Media
     {
-        $disk = $disk ?? config('filesystems.default', 'public');
+        $disk = $disk ?? 'public';
         $path = $file->store('uploads/' . class_basename($this) . '/' . strtolower($this->getTable()), $disk);
 
         return $this->media()->create([

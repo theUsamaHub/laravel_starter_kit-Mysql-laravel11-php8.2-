@@ -47,7 +47,7 @@ class FileUploadService
         ?string $disk = null,
         ?int $createdBy = null
     ): Media {
-        $disk = $disk ?? config('filesystems.default', 'public');
+        $disk = $disk ?? 'public';
         $path = $file->store($directory, $disk);
 
         return Media::create([

@@ -32,7 +32,7 @@ class Media extends Model
 
     public function getUrlAttribute(): string
     {
-        return asset('storage/' . $this->path);
+        return \Illuminate\Support\Facades\Storage::disk($this->disk)->url($this->path);
     }
 
     public function getSizeFormattedAttribute(): string
