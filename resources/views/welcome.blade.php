@@ -7,45 +7,7 @@
         @vite(['resources/css/app.scss', 'resources/js/app.js'])
     </head>
     <body>
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg bg-white border-bottom">
-            <div class="container">
-                <a class="navbar-brand fw-bold" href="/" style="color: var(--bs-primary);">
-                    {{ config('app.name', 'LSK') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#features">{{ __('Features') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#about">{{ __('About') }}</a>
-                        </li>
-                    </ul>
-                    <div class="d-flex gap-2">
-                        @if (Route::has('login'))
-                            @auth
-                                <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-sm">
-                                    {{ __('Dashboard') }}
-                                </a>
-                            @else
-                                <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">
-                                    {{ __('Log in') }}
-                                </a>
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="btn btn-primary btn-sm">
-                                        {{ __('Register') }}
-                                    </a>
-                                @endif
-                            @endauth
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </nav>
+        @include('partials.public-navbar')
 
         <!-- Hero Section -->
         <section class="py-5 bg-white">
@@ -187,18 +149,6 @@
             </div>
         </section>
 
-        <!-- Footer -->
-        <footer class="bg-white border-top py-4">
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="text-muted" style="font-size: 0.875rem;">
-                        &copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('All rights reserved.') }}
-                    </span>
-                    <span class="text-muted" style="font-size: 0.875rem;">
-                        Laravel v{{ app()->version() }}
-                    </span>
-                </div>
-            </div>
-        </footer>
+        @include('partials.public-footer')
     </body>
 </html>
