@@ -13,9 +13,9 @@
             <i class="bi bi-search" style="font-size:0.8rem;"></i>
             <span class="text-muted" style="font-size:0.8rem;">Search</span>
             <div class="d-flex align-items-center gap-1" style="font-size:0.6rem;">
-                <kbd class="px-1 rounded" style="background:#f0f0f0;border:1px solid #d0d0d0;padding:0 3px;">Ctrl</kbd>
+                <kbd class="px-1 rounded text-black" style="background:#f0f0f0;border:1px solid #d0d0d0;padding:0 3px;">Ctrl</kbd>
                 <span class="text-muted">+</span>
-                <kbd class="px-1 rounded" style="background:#f0f0f0;border:1px solid #d0d0d0;padding:0 3px;">K</kbd>
+                <kbd class="px-1 rounded text-black" style="background:#f0f0f0;border:1px solid #d0d0d0;padding:0 3px;">K</kbd>
             </div>
         </button>
 

@@ -55,7 +55,7 @@
                     </li>
                 </ul>
                 <div class="px-3 py-2 border-top d-flex gap-3 justify-content-end bg-body-tertiary" style="font-size:0.6rem;">
-                    <span class="text-muted"><kbd class="bg-white text-black px-1 rounded border">↑</kbd> <kbd class="bg-white px-1 rounded border">↓</kbd> Navigate</span>
+                    <span class="text-muted"><kbd class="bg-white text-black px-1 rounded border">↑</kbd> <kbd class="bg-white text-black px-1 rounded border">↓</kbd> Navigate</span>
                     <span class="text-muted"><kbd class="bg-white text-black px-1 rounded border">↵</kbd> Open</span>
                     <span class="text-muted"><kbd class="bg-white text-black px-1 rounded border">ESC</kbd> Close</span>
                 </div>
