@@ -30,7 +30,7 @@
 
                         <div class="mb-3">
                             <x-input-label for="description" :value="__('Description')" />
-                            <textarea id="description" name="description" class="form-control" rows="3">{{ old('description', $category->description) }}</textarea>
+                            <x-tinymce name="description" rows="8">{{ old('description', $category->description) }}</x-tinymce>
                             <x-input-error :messages="$errors->get('description')" class="mt-1" />
                         </div>
 
