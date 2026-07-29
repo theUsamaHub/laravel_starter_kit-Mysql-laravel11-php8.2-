@@ -42,6 +42,12 @@ Route::prefix('admin')
         Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
         Route::delete('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'destroy'])->name('activity-logs.destroy');
 
+        // Maintenance Mode
+        Route::get('/maintenance', [\App\Http\Controllers\Admin\MaintenanceController::class, 'index'])->name('maintenance.index');
+        Route::post('/maintenance/toggle', [\App\Http\Controllers\Admin\MaintenanceController::class, 'toggle'])->name('maintenance.toggle');
+        Route::put('/maintenance/message', [\App\Http\Controllers\Admin\MaintenanceController::class, 'updateMessage'])->name('maintenance.message');
+        Route::put('/maintenance/bypass-routes', [\App\Http\Controllers\Admin\MaintenanceController::class, 'updateBypassRoutes'])->name('maintenance.bypass-routes');
+
         // Health Dashboard
         Route::get('/health', [\App\Http\Controllers\Admin\HealthController::class, 'index'])->name('health.index');
 

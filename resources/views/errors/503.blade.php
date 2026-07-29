@@ -90,7 +90,7 @@
                     <i class="bi bi-tools"></i>
                 </div>
                 <h1 class="error-title">{{ __('Under Maintenance') }}</h1>
-                <p class="error-message">{{ __('We are currently performing scheduled maintenance. We will be back shortly. Thank you for your patience.') }}</p>
+                <p class="error-message">{{ $message ?? __('We are currently performing scheduled maintenance. We will be back shortly. Thank you for your patience.') }}</p>
                 <a href="{{ url('/') }}" class="error-btn">
                     <i class="bi bi-arrow-clockwise"></i> {{ __('Try Again') }}
                 </a>
