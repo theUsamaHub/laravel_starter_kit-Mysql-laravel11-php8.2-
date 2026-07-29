@@ -24,7 +24,7 @@
             $unreadCount = cache()->remember('notifications.unread.' . auth()->id(), 60, fn () =>
                 auth()->user()->unreadNotifications()->count()
             );
-            $recentNotifications = auth()->user()->notifications()->latest()->take(8)->get();
+            $recentNotifications = cache()->remember('notifications.recent.' . auth()->id(), 60, fn() => auth()->user()->notifications()->latest()->take(8)->get());
         @endphp
         <div class="dropdown me-3" x-data="{ open: false }" @click.outside="open = false">
             <button class="btn btn-link text-dark p-1 position-relative" @click="open = !open" aria-expanded="false">

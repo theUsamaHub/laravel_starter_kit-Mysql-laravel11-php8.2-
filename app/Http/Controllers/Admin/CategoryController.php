@@ -75,19 +75,19 @@ class CategoryController extends Controller
         $this->categoryService->update($category, $data);
 
         // Handle main image update
+        $existingMedia = $category->getFirstMedia();
+
         if ($request->boolean('remove_image') && $category->image) {
-            $existing = $category->getFirstMedia();
-            if ($existing) {
-                $category->removeMedia($existing);
+            if ($existingMedia) {
+                $category->removeMedia($existingMedia);
             }
             $category->update(['image' => null]);
+            $existingMedia = null;
         }
 
         if ($request->hasFile('image')) {
-            // Remove old main image if exists
-            $existing = $category->getFirstMedia();
-            if ($existing) {
-                $category->removeMedia($existing);
+            if ($existingMedia) {
+                $category->removeMedia($existingMedia);
             }
             $media = $category->addMediaFromRequest('image');
             if ($media) {

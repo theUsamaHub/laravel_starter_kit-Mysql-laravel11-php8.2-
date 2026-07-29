@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class SettingController extends Controller
@@ -24,8 +25,10 @@ class SettingController extends Controller
             'settings' => ['required', 'array'],
         ]);
 
+        $records = Setting::whereIn('key', array_keys($validated['settings']))->get()->keyBy('key');
+
         foreach ($validated['settings'] as $key => $value) {
-            $record = Setting::where('key', $key)->first();
+            $record = $records->get($key);
             if (!$record) {
                 continue;
             }
@@ -47,6 +50,8 @@ class SettingController extends Controller
             $record->update(['value' => $typedValue]);
         }
 
+        Cache::forget('settings');
+
         return redirect()->route('admin.settings.index')
             ->with('success', 'Settings updated successfully.');
     }
@@ -61,6 +66,7 @@ class SettingController extends Controller
         ]);
 
         Setting::create($validated);
+        Cache::forget('settings');
 
         return redirect()->route('admin.settings.index')
             ->with('success', 'Setting created successfully.');
@@ -69,6 +75,7 @@ class SettingController extends Controller
     public function destroy(Setting $setting): RedirectResponse
     {
         $setting->delete();
+        Cache::forget('settings');
 
         return back()->with('success', 'Setting deleted successfully.');
     }

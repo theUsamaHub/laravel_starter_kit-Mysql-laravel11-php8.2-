@@ -6,6 +6,7 @@ use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryService
 {
@@ -49,7 +50,9 @@ class CategoryService
             $data['is_active'] = false;
         }
 
-        return Category::create($data);
+        $category = Category::create($data);
+        $this->refreshCache();
+        return $category;
     }
 
     public function update(Category $category, array $data): Category
@@ -59,29 +62,41 @@ class CategoryService
         }
 
         $category->update($data);
+        $this->refreshCache();
         return $category->fresh();
     }
 
     public function delete(Category $category): bool
     {
-        return $category->delete();
+        $result = $category->delete();
+        $this->refreshCache();
+        return $result;
     }
 
     public function restore(int $id): Category
     {
         $category = Category::withTrashed()->findOrFail($id);
         $category->restore();
+        $this->refreshCache();
         return $category;
     }
 
     public function forceDelete(int $id): bool
     {
         $category = Category::withTrashed()->findOrFail($id);
-        return $category->forceDelete();
+        $result = $category->forceDelete();
+        $this->refreshCache();
+        return $result;
     }
 
     public function count(): int
     {
-        return Category::count();
+        return Cache::remember('categories.count', 3600, fn() => Category::count());
+    }
+
+    public function refreshCache(): void
+    {
+        Cache::forget('categories.count');
+        Cache::forget('categories.active');
     }
 }

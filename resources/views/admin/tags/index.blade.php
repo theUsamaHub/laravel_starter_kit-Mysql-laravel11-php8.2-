@@ -12,7 +12,7 @@
             <div class="card border-start border-warning border-4 h-100">
                 <div class="card-body">
                     <div class="text-muted" style="font-size:0.75rem;">{{ __('Total Tags') }}</div>
-                    <div class="fs-4 fw-bold">{{ \App\Models\Tag::count() }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['tags_count'] }}</div>
                 </div>
             </div>
         </div>
@@ -20,7 +20,7 @@
             <div class="card border-start border-primary border-4 h-100">
                 <div class="card-body">
                     <div class="text-muted" style="font-size:0.75rem;">{{ __('Categories Tagged') }}</div>
-                    <div class="fs-4 fw-bold">{{ \App\Models\Taggable::distinct('taggable_id')->count() }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['categories_tagged'] }}</div>
                 </div>
             </div>
         </div>

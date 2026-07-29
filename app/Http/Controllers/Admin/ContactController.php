@@ -36,11 +36,17 @@ class ContactController extends Controller
 
         $contacts = $query->latest()->paginate(15);
 
+        $contactCounts = Contact::selectRaw("count(*) as total")
+            ->selectRaw("count(case when status = 'new' then 1 end) as new_count")
+            ->selectRaw("count(case when status = 'read' then 1 end) as read_count")
+            ->selectRaw("count(case when status = 'replied' then 1 end) as replied_count")
+            ->first();
+
         $stats = [
-            'total' => Contact::count(),
-            'new' => Contact::where('status', 'new')->count(),
-            'read' => Contact::where('status', 'read')->count(),
-            'replied' => Contact::where('status', 'replied')->count(),
+            'total' => $contactCounts->total,
+            'new' => $contactCounts->new_count,
+            'read' => $contactCounts->read_count,
+            'replied' => $contactCounts->replied_count,
         ];
 
         return view('admin.contacts.index', compact('contacts', 'stats'));

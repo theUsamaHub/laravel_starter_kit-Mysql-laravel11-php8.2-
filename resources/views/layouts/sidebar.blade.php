@@ -30,7 +30,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}" href="{{ route('admin.contacts.index') }}">
                         <i class="bi bi-envelope"></i> {{ __('Contacts') }}
-                        @php $nc = \App\Models\Contact::where('status', 'new')->count(); @endphp
+                        @php $nc = cache()->remember('contacts.new_count', 60, fn() => \App\Models\Contact::where('status', 'new')->count()); @endphp
                         @if ($nc > 0)<span class="badge bg-danger ms-1">{{ $nc }}</span>@endif
                     </a>
                 </li>
@@ -42,7 +42,7 @@
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}"><i class="bi bi-gear"></i> {{ __('Settings') }}</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.maintenance.*') ? 'active' : '' }}" href="{{ route('admin.maintenance.index') }}"><i class="bi bi-shield-exclamation"></i> {{ __('Maintenance') }}</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.health.*') ? 'active' : '' }}" href="{{ route('admin.health.index') }}"><i class="bi bi-heart-pulse"></i> {{ __('Health') }}</a></li>
-                <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}" href="{{ route('admin.notifications.index') }}"><i class="bi bi-bell"></i> {{ __('Notifications') }} @php $nc = auth()->user()->unreadNotifications()->count(); @endphp @if($nc > 0)<span class="badge bg-danger ms-1">{{ $nc }}</span>@endif</a></li>
+                <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}" href="{{ route('admin.notifications.index') }}"><i class="bi bi-bell"></i> {{ __('Notifications') }} @php $nc = cache()->remember('notifications.unread.' . auth()->id(), 60, fn() => auth()->user()->unreadNotifications()->count()); @endphp @if($nc > 0)<span class="badge bg-danger ms-1">{{ $nc }}</span>@endif</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.subscribers.*') ? 'active' : '' }}" href="{{ route('admin.subscribers.index') }}"><i class="bi bi-envelope-paper"></i> {{ __('Subscribers') }}</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.activity-logs.*') ? 'active' : '' }}" href="{{ route('admin.activity-logs.index') }}"><i class="bi bi-clock-history"></i> {{ __('Activity') }}</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.ip-restrictions.*') ? 'active' : '' }}" href="{{ route('admin.ip-restrictions.index') }}"><i class="bi bi-shield-lock"></i> {{ __('IP Restrictions') }}</a></li>

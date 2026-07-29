@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -44,10 +45,8 @@ class UserController extends Controller
         $user->update(collect($validated)->only(['name', 'email'])->toArray());
 
         if (isset($validated['roles'])) {
-            $user->roles()->detach();
-            foreach ($validated['roles'] as $roleSlug) {
-                $user->assignRole($roleSlug);
-            }
+            $roleIds = Role::whereIn('slug', $validated['roles'])->pluck('id');
+            $user->roles()->sync($roleIds);
         }
 
         return response()->json([

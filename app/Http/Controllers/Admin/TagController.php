@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Taggable;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,7 +21,16 @@ class TagController extends Controller
 
         $tags = $query->latest()->paginate(20);
 
-        return view('admin.tags.index', compact('tags'));
+        $tagCount = $tags->total();
+
+        $taggableCount = Taggable::distinct('taggable_id')->count('taggable_id');
+
+        $stats = [
+            'tags_count' => $tagCount,
+            'categories_tagged' => $taggableCount,
+        ];
+
+        return view('admin.tags.index', compact('tags', 'stats'));
     }
 
     public function create(): View

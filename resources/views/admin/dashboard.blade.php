@@ -5,16 +5,6 @@
 
     <!-- Stats Cards -->
     <div class="row g-4 mb-4">
-        @php
-            $stats = [
-                ['label' => __('Users'), 'count' => \App\Models\User::count(), 'icon' => 'bi-people', 'color' => 'primary', 'route' => 'admin.users.index'],
-                ['label' => __('Categories'), 'count' => \App\Models\Category::count(), 'icon' => 'bi-tags', 'color' => 'success', 'route' => 'admin.categories.index'],
-                ['label' => __('Contacts'), 'count' => \App\Models\Contact::count(), 'icon' => 'bi-envelope', 'color' => 'info', 'route' => 'admin.contacts.index', 'badge' => \App\Models\Contact::where('status', 'new')->count()],
-                ['label' => __('Tags'), 'count' => \App\Models\Tag::count(), 'icon' => 'bi-bookmark', 'color' => 'warning', 'route' => 'admin.tags.index'],
-                ['label' => __('Roles'), 'count' => \App\Models\Role::count(), 'icon' => 'bi-shield-check', 'color' => 'secondary', 'route' => 'admin.roles.index'],
-                ['label' => __('Media'), 'count' => \App\Models\Media::count(), 'icon' => 'bi-folder', 'color' => 'dark', 'route' => 'admin.media.index'],
-            ];
-        @endphp
         @foreach ($stats as $stat)
             <div class="col-md-4 col-lg-2">
                 <a href="{{ route($stat['route']) }}" class="text-decoration-none">
@@ -45,20 +35,9 @@
             <div class="card">
                 <div class="card-header"><h6 class="mb-0 fw-semibold">{{ __('Users & Contacts (Last 7 Days)') }}</h6></div>
                 <div class="card-body">
-                    @php
-                        $days = collect();
-                        for ($i = 6; $i >= 0; $i--) {
-                            $date = now()->subDays($i);
-                            $days->push([
-                                'label' => $date->format('M d'),
-                                'users' => \App\Models\User::whereDate('created_at', $date)->count(),
-                                'contacts' => \App\Models\Contact::whereDate('created_at', $date)->count(),
-                            ]);
-                        }
-                        $maxVal = max(1, $days->max(fn($d) => max($d['users'], $d['contacts'])));
-                    @endphp
+                    @php $maxVal = max(1, collect($chartData)->max(fn($d) => max($d['users'], $d['contacts']))); @endphp
                     <div class="d-flex align-items-end gap-2" style="height: 200px;">
-                        @foreach ($days as $day)
+                        @foreach ($chartData as $day)
                             <div class="flex-grow-1 d-flex flex-column align-items-center justify-content-end" style="height: 100%;">
                                 <div class="d-flex gap-1 align-items-end" style="height: 180px;">
                                     <div class="rounded-top" style="width:12px; height: {{ ($day['users'] / $maxVal) * 160 }}px; background: var(--bs-primary); min-height: 2px;" title="{{ $day['users'] }} users"></div>
@@ -81,25 +60,25 @@
                 <div class="card-header"><h6 class="mb-0 fw-semibold">{{ __('Activity Today') }}</h6></div>
                 <div class="card-body">
                     @php
-                        $todayLogs = \App\Models\ActivityLog::whereDate('created_at', today())->get();
-                        $created = $todayLogs->where('event', 'created')->count();
-                        $updated = $todayLogs->where('event', 'updated')->count();
-                        $deleted = $todayLogs->where('event', 'deleted')->count();
+                        $totalToday = $activityToday['total'];
+                        $createdToday = $activityToday['created'];
+                        $updatedToday = $activityToday['updated'];
+                        $deletedToday = $activityToday['deleted'];
                     @endphp
                     <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1"><small>{{ __('Created') }}</small><small class="fw-bold">{{ $created }}</small></div>
-                        <div class="progress" style="height:8px;"><div class="progress-bar bg-success" style="width:{{ $created > 0 ? 100 : 0 }}%"></div></div>
+                        <div class="d-flex justify-content-between mb-1"><small>{{ __('Created') }}</small><small class="fw-bold">{{ $createdToday }}</small></div>
+                        <div class="progress" style="height:8px;"><div class="progress-bar bg-success" style="width:{{ $createdToday > 0 ? 100 : 0 }}%"></div></div>
                     </div>
                     <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1"><small>{{ __('Updated') }}</small><small class="fw-bold">{{ $updated }}</small></div>
-                        <div class="progress" style="height:8px;"><div class="progress-bar bg-warning" style="width:{{ $updated > 0 ? ($updated / max(1, $todayLogs->count()) * 100) : 0 }}%"></div></div>
+                        <div class="d-flex justify-content-between mb-1"><small>{{ __('Updated') }}</small><small class="fw-bold">{{ $updatedToday }}</small></div>
+                        <div class="progress" style="height:8px;"><div class="progress-bar bg-warning" style="width:{{ $updatedToday > 0 ? ($updatedToday / max(1, $totalToday) * 100) : 0 }}%"></div></div>
                     </div>
                     <div>
-                        <div class="d-flex justify-content-between mb-1"><small>{{ __('Deleted') }}</small><small class="fw-bold">{{ $deleted }}</small></div>
-                        <div class="progress" style="height:8px;"><div class="progress-bar bg-danger" style="width:{{ $deleted > 0 ? ($deleted / max(1, $todayLogs->count()) * 100) : 0 }}%"></div></div>
+                        <div class="d-flex justify-content-between mb-1"><small>{{ __('Deleted') }}</small><small class="fw-bold">{{ $deletedToday }}</small></div>
+                        <div class="progress" style="height:8px;"><div class="progress-bar bg-danger" style="width:{{ $deletedToday > 0 ? ($deletedToday / max(1, $totalToday) * 100) : 0 }}%"></div></div>
                     </div>
                     <hr>
-                    <div class="text-center text-muted" style="font-size:0.8rem;">{{ __('Total: ') . $todayLogs->count() . __(' actions today') }}</div>
+                    <div class="text-center text-muted" style="font-size:0.8rem;">{{ __('Total: ') . $totalToday . __(' actions today') }}</div>
                 </div>
             </div>
         </div>
@@ -118,7 +97,7 @@
                         <table class="table table-hover mb-0">
                             <thead><tr><th>{{ __('Name') }}</th><th>{{ __('Email') }}</th><th>{{ __('Roles') }}</th><th>{{ __('Joined') }}</th></tr></thead>
                             <tbody>
-                                @forelse(\App\Models\User::with('roles')->latest()->take(5)->get() as $user)
+                                @forelse($recentUsers as $user)
                                     <tr>
                                         <td class="fw-medium">{{ $user->name }}</td>
                                         <td class="text-muted">{{ $user->email }}</td>

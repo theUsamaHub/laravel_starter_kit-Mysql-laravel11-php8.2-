@@ -17,23 +17,23 @@ class Setting extends Model
     public static function get(string $key, mixed $default = null): mixed
     {
         $settings = Cache::remember('settings', 3600, function () {
-            return static::pluck('value', 'key')->toArray();
+            return static::all()->mapWithKeys(fn($s) => [
+                $s->key => ['value' => $s->value, 'type' => $s->type],
+            ])->toArray();
         });
 
-        $value = $settings[$key] ?? $default;
+        $record = $settings[$key] ?? null;
 
-        // Cast based on type
-        $record = static::where('key', $key)->first();
-        if ($record) {
-            return match ($record->type) {
-                'boolean' => (bool) $value,
-                'number' => (int) $value,
-                'json' => json_decode($value, true),
-                default => $value,
-            };
+        if ($record === null) {
+            return $default;
         }
 
-        return $default;
+        return match ($record['type']) {
+            'boolean' => (bool) $record['value'],
+            'number' => (int) $record['value'],
+            'json' => json_decode($record['value'], true),
+            default => $record['value'],
+        };
     }
 
     public static function set(string $key, mixed $value, string $type = 'text'): static

@@ -39,10 +39,22 @@ class ActivityLogController extends Controller
 
         $logs = $query->latest()->paginate(30);
 
+        $todayStart = today()->startOfDay();
+        $stats = ActivityLog::selectRaw("count(*) as total")
+            ->selectRaw("count(case when created_at >= ? then 1 end) as today_count", [$todayStart])
+            ->selectRaw("count(case when event = 'created' then 1 end) as created_count")
+            ->selectRaw("count(case when event = 'updated' then 1 end) as updated_count")
+            ->selectRaw("count(case when event = 'deleted' then 1 end) as deleted_count")
+            ->first();
+
         $stats = [
-            'total' => ActivityLog::count(),
-            'today' => ActivityLog::whereDate('created_at', today())->count(),
-            'events' => ActivityLog::selectRaw('event, count(*) as count')->groupBy('event')->pluck('count', 'event'),
+            'total' => (int) $stats->total,
+            'today' => (int) $stats->today_count,
+            'events' => array_filter([
+                'created' => (int) $stats->created_count,
+                'updated' => (int) $stats->updated_count,
+                'deleted' => (int) $stats->deleted_count,
+            ]),
         ];
 
         return view('admin.activity-logs.index', compact('logs', 'stats'));
@@ -75,30 +87,30 @@ class ActivityLogController extends Controller
             $query->whereDate('created_at', '<=', $to);
         }
 
-        $logs = $query->latest()->get();
-
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="activity-logs-' . now()->format('Y-m-d-His') . '.csv"',
         ];
 
-        $callback = function () use ($logs) {
+        $callback = function () use ($query) {
             $handle = fopen('php://output', 'w');
             fputcsv($handle, ['Time', 'User', 'Event', 'Model', 'Model ID', 'IP Address', 'User Agent', 'Old Values', 'New Values']);
 
-            foreach ($logs as $log) {
-                fputcsv($handle, [
-                    $log->created_at->toDateTimeString(),
-                    $log->user?->name ?? 'System',
-                    $log->event,
-                    class_basename($log->auditable_type),
-                    $log->auditable_id,
-                    $log->ip_address,
-                    $log->user_agent,
-                    json_encode($log->old_values),
-                    json_encode($log->new_values),
-                ]);
-            }
+            $query->latest()->chunk(200, function ($logs) use ($handle) {
+                foreach ($logs as $log) {
+                    fputcsv($handle, [
+                        $log->created_at->toDateTimeString(),
+                        $log->user?->name ?? 'System',
+                        $log->event,
+                        class_basename($log->auditable_type),
+                        $log->auditable_id,
+                        $log->ip_address,
+                        $log->user_agent,
+                        json_encode($log->old_values),
+                        json_encode($log->new_values),
+                    ]);
+                }
+            });
 
             fclose($handle);
         };

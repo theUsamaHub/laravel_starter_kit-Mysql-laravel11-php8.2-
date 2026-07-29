@@ -29,10 +29,17 @@ class UserController extends Controller
 
         $users = $query->latest()->paginate(15);
 
+        $userCounts = User::selectRaw("count(*) as total")
+            ->selectRaw("count(case when exists (select 1 from role_user inner join roles on roles.id = role_user.role_id where role_user.user_id = users.id and roles.slug = 'admin') then 1 end) as admins")
+            ->selectRaw("count(case when email_verified_at is not null then 1 end) as verified")
+            ->first();
+
+
+
         $stats = [
-            'total' => User::count(),
-            'admins' => User::whereHas('roles', fn($q) => $q->where('slug', 'admin'))->count(),
-            'verified' => User::whereNotNull('email_verified_at')->count(),
+            'total' => (int) $userCounts->total,
+            'admins' => (int) $userCounts->admins,
+            'verified' => (int) $userCounts->verified,
         ];
 
         return view('admin.users.index', compact('users', 'stats'));
@@ -67,10 +74,8 @@ class UserController extends Controller
             ...(!empty($validated['password']) ? ['password' => Hash::make($validated['password'])] : []),
         ]);
 
-        $user->roles()->detach();
-        foreach ($validated['roles'] as $roleSlug) {
-            $user->assignRole($roleSlug);
-        }
+        $roleIds = Role::whereIn('slug', $validated['roles'])->pluck('id');
+        $user->roles()->sync($roleIds);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User updated successfully.');

@@ -38,10 +38,15 @@ class SubscriberController extends Controller
 
         $subscribers = $query->latest()->paginate(30);
 
+        $subscriberCounts = Subscriber::selectRaw("count(*) as total")
+            ->selectRaw("count(case when unsubscribed_at is null then 1 end) as active_count")
+            ->selectRaw("count(case when unsubscribed_at is not null then 1 end) as unsubscribed_count")
+            ->first();
+
         $stats = [
-            'total' => Subscriber::count(),
-            'active' => Subscriber::active()->count(),
-            'unsubscribed' => Subscriber::whereNotNull('unsubscribed_at')->count(),
+            'total' => $subscriberCounts->total,
+            'active' => $subscriberCounts->active_count,
+            'unsubscribed' => $subscriberCounts->unsubscribed_count,
         ];
 
         return view('admin.subscribers.index', compact('subscribers', 'stats'));
@@ -79,25 +84,25 @@ class SubscriberController extends Controller
             $query->whereDate('subscribed_at', '<=', $to);
         }
 
-        $subscribers = $query->latest()->get();
-
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="subscribers-' . now()->format('Y-m-d-His') . '.csv"',
         ];
 
-        $callback = function () use ($subscribers) {
+        $callback = function () use ($query) {
             $handle = fopen('php://output', 'w');
             fputcsv($handle, ['Email', 'Name', 'Subscribed At', 'IP Address']);
 
-            foreach ($subscribers as $subscriber) {
-                fputcsv($handle, [
-                    $subscriber->email,
-                    $subscriber->name,
-                    $subscriber->subscribed_at?->toDateTimeString(),
-                    $subscriber->ip_address,
-                ]);
-            }
+            $query->latest()->chunk(200, function ($subscribers) use ($handle) {
+                foreach ($subscribers as $subscriber) {
+                    fputcsv($handle, [
+                        $subscriber->email,
+                        $subscriber->name,
+                        $subscriber->subscribed_at?->toDateTimeString(),
+                        $subscriber->ip_address,
+                    ]);
+                }
+            });
 
             fclose($handle);
         };

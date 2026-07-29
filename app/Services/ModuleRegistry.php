@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -12,64 +13,63 @@ class ModuleRegistry
      */
     public static function discoverModules(): array
     {
-        $modules = [];
-        $controllerPath = app_path('Http/Controllers/Admin');
+        return Cache::rememberForever('module_registry.modules', function () {
+            $modules = [];
+            $controllerPath = app_path('Http/Controllers/Admin');
 
-        if (!File::isDirectory($controllerPath)) {
-            return $modules;
-        }
-
-        foreach (File::files($controllerPath) as $file) {
-            if ($file->getExtension() !== 'php') continue;
-
-            $className = 'App\\Http\\Controllers\\Admin\\' . $file->getFilenameWithoutExtension();
-
-            if (!class_exists($className)) continue;
-
-            // Skip non-CRUD controllers
-            $skipControllers = [
-                'LogViewerController',
-                'BackupController',
-                'ActivityLogController',
-                'HealthController',
-                'SessionController',
-                'MaintenanceController',
-            ];
-
-            if (in_array($file->getFilenameWithoutExtension(), $skipControllers)) {
-                // Still register these but with custom permissions
-                $module = self::registerSpecialController($file->getFilenameWithoutExtension());
-                if ($module) $modules[$module['slug']] = $module;
-                continue;
+            if (!File::isDirectory($controllerPath)) {
+                return $modules;
             }
 
-            $reflection = new \ReflectionClass($className);
-            if ($reflection->isAbstract()) continue;
+            foreach (File::files($controllerPath) as $file) {
+                if ($file->getExtension() !== 'php') continue;
 
-            $moduleName = $file->getFilenameWithoutExtension();
-            $moduleSlug = Str::snake(Str::beforeLast($moduleName, 'Controller'));
+                $className = 'App\\Http\\Controllers\\Admin\\' . $file->getFilenameWithoutExtension();
 
-            // Detect capabilities by checking method existence
-            $capabilities = [];
-            $reflectionMethods = array_map(fn($m) => $m->getName(), $reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
+                if (!class_exists($className)) continue;
 
-            if (in_array('index', $reflectionMethods)) $capabilities[] = 'view';
-            if (in_array('create', $reflectionMethods) || in_array('store', $reflectionMethods)) $capabilities[] = 'create';
-            if (in_array('edit', $reflectionMethods) || in_array('update', $reflectionMethods)) $capabilities[] = 'edit';
-            if (in_array('destroy', $reflectionMethods)) $capabilities[] = 'delete';
+                $skipControllers = [
+                    'LogViewerController',
+                    'BackupController',
+                    'ActivityLogController',
+                    'HealthController',
+                    'SessionController',
+                    'MaintenanceController',
+                ];
 
-            if (empty($capabilities)) continue;
+                if (in_array($file->getFilenameWithoutExtension(), $skipControllers)) {
+                    $module = self::registerSpecialController($file->getFilenameWithoutExtension());
+                    if ($module) $modules[$module['slug']] = $module;
+                    continue;
+                }
 
-            $modules[$moduleSlug] = [
-                'slug' => $moduleSlug,
-                'name' => Str::headline(Str::beforeLast($moduleName, 'Controller')),
-                'controller' => $className,
-                'capabilities' => $capabilities,
-                'route_prefix' => 'admin.' . $moduleSlug,
-            ];
-        }
+                $reflection = new \ReflectionClass($className);
+                if ($reflection->isAbstract()) continue;
 
-        return $modules;
+                $moduleName = $file->getFilenameWithoutExtension();
+                $moduleSlug = Str::snake(Str::beforeLast($moduleName, 'Controller'));
+
+                $capabilities = [];
+                $reflectionMethods = array_map(fn($m) => $m->getName(), $reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
+
+                if (in_array('index', $reflectionMethods)) $capabilities[] = 'view';
+                if (in_array('create', $reflectionMethods) || in_array('store', $reflectionMethods)) $capabilities[] = 'create';
+                if (in_array('edit', $reflectionMethods) || in_array('update', $reflectionMethods)) $capabilities[] = 'edit';
+                if (in_array('destroy', $reflectionMethods)) $capabilities[] = 'delete';
+
+                if (empty($capabilities)) continue;
+
+                $modules[$moduleSlug] = [
+                    'slug' => $moduleSlug,
+                    'name' => Str::headline(Str::beforeLast($moduleName, 'Controller')),
+                    'controller' => $className,
+                    'capabilities' => $capabilities,
+                    'route_prefix' => 'admin.' . $moduleSlug,
+                ];
+            }
+
+            return $modules;
+        });
     }
 
     /**
