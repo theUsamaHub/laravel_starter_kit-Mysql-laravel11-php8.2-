@@ -32,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Middleware\RoleMiddleware::class,
             'permission' => \App\Middleware\CheckPermission::class,
+            'ip-restrict' => \App\Http\Middleware\IpRestrictionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

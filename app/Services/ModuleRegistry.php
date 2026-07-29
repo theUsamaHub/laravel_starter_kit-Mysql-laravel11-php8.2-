@@ -106,6 +106,13 @@ class ModuleRegistry
                 'capabilities' => ['view'],
                 'route_prefix' => 'admin.health',
             ],
+            'IpRestrictionController' => [
+                'slug' => 'ip-restrictions',
+                'name' => 'IP Restrictions',
+                'controller' => "App\\Http\\Controllers\\Admin\\{$controllerName}",
+                'capabilities' => ['view', 'edit'],
+                'route_prefix' => 'admin.ip-restrictions',
+            ],
             'SessionController' => [
                 'slug' => 'sessions',
                 'name' => 'Sessions',

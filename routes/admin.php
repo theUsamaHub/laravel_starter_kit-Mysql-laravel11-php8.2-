@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware(['auth', 'verified', 'role:admin'])
+    ->middleware(['auth', 'verified', 'role:admin', 'ip-restrict'])
     ->group(function () {
 
         Route::get('/', function () {
@@ -40,6 +40,9 @@ Route::prefix('admin')
 
         // Activity Log
         Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
+        Route::get('/ip-restrictions', [\App\Http\Controllers\Admin\IpRestrictionController::class, 'index'])->name('ip-restrictions.index');
+        Route::put('/ip-restrictions', [\App\Http\Controllers\Admin\IpRestrictionController::class, 'update'])->name('ip-restrictions.update');
+
         Route::get('/sessions', [\App\Http\Controllers\Admin\SessionController::class, 'index'])->name('sessions.index');
         Route::delete('/sessions/{id}', [\App\Http\Controllers\Admin\SessionController::class, 'destroy'])->name('sessions.destroy');
 
