@@ -31,6 +31,9 @@
                                 <a href="{{ route('register') }}" class="btn btn-primary btn-lg">
                                     {{ __('Get Started') }}
                                 </a>
+                                <a href="{{ route('public.pricing') }}" class="btn btn-outline-primary btn-lg">
+                                    {{ __('Pricing') }}
+                                </a>
                                 <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-lg">
                                     {{ __('Learn More') }}
                                 </a>

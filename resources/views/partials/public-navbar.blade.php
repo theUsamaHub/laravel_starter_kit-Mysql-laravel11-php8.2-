@@ -18,6 +18,9 @@
                     <a class="nav-link {{ request()->routeIs('public.services') ? 'active' : '' }}" href="{{ route('public.services') }}">{{ __('Services') }}</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('public.pricing') ? 'active' : '' }}" href="{{ route('public.pricing') }}">{{ __('Pricing') }}</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('public.contact') ? 'active' : '' }}" href="{{ route('public.contact') }}">{{ __('Contact') }}</a>
                 </li>
             </ul>

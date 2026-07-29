@@ -9,6 +9,7 @@
             <div class="col-md-6 text-md-end">
                 <a href="{{ route('public.about') }}" class="text-muted text-decoration-none me-3" style="font-size: 0.875rem;">{{ __('About') }}</a>
                 <a href="{{ route('public.services') }}" class="text-muted text-decoration-none me-3" style="font-size: 0.875rem;">{{ __('Services') }}</a>
+                <a href="{{ route('public.pricing') }}" class="text-muted text-decoration-none me-3" style="font-size: 0.875rem;">{{ __('Pricing') }}</a>
                 <a href="{{ route('public.contact') }}" class="text-muted text-decoration-none" style="font-size: 0.875rem;">{{ __('Contact') }}</a>
             </div>
         </div>

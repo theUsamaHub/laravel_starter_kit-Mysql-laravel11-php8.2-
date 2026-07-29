@@ -20,6 +20,10 @@ Route::get('/services', function () {
     return view('public.services');
 })->name('public.services');
 
+Route::get('/pricing', function () {
+    return view('public.pricing');
+})->name('public.pricing');
+
 Route::get('/contact', function () {
     return view('public.contact');
 })->name('public.contact');
