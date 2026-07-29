@@ -108,10 +108,37 @@ class CategoryController extends Controller
 
     public function destroy(Category $category): RedirectResponse
     {
-        $category->clearMedia();
         $this->categoryService->delete($category);
 
         return redirect()->route('admin.categories.index')
-            ->with('success', 'Category deleted successfully.');
+            ->with('success', 'Category moved to trash.');
+    }
+
+    public function trashed(): View
+    {
+        $categories = Category::onlyTrashed()
+            ->with(['createdBy', 'updatedBy'])
+            ->orderBy('deleted_at', 'desc')
+            ->paginate(15);
+
+        return view('admin.categories.trashed', compact('categories'));
+    }
+
+    public function restore(int $id): RedirectResponse
+    {
+        $this->categoryService->restore($id);
+
+        return redirect()->route('admin.categories.trashed')
+            ->with('success', 'Category restored successfully.');
+    }
+
+    public function forceDelete(int $id): RedirectResponse
+    {
+        $category = Category::withTrashed()->findOrFail($id);
+        $category->clearMedia();
+        $this->categoryService->forceDelete($id);
+
+        return redirect()->route('admin.categories.trashed')
+            ->with('success', 'Category permanently deleted.');
     }
 }
