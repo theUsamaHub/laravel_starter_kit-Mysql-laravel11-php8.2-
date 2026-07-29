@@ -80,6 +80,7 @@ function commandPalette() {
             { name: 'Media Library',      url: '{{ route("admin.media.index") }}',      icon: 'bi bi-folder',        category: 'Admin' },
             { name: 'Validation Rules',   url: '{{ route("admin.validation-rules.index") }}', icon: 'bi bi-shield-shaded', category: 'Admin' },
             { name: 'Settings',           url: '{{ route("admin.settings.index") }}',   icon: 'bi bi-gear',          category: 'Admin' },
+            { name: 'Health Dashboard',   url: '{{ route("admin.health.index") }}',    icon: 'bi bi-heart-pulse',   category: 'Admin' },
             { name: 'Activity Logs',      url: '{{ route("admin.activity-logs.index") }}', icon: 'bi bi-clock-history', category: 'Admin' },
             { name: 'Log Viewer',         url: '{{ route("admin.logs.index") }}',       icon: 'bi bi-journal-text',  category: 'Admin' },
             { name: 'Backups',            url: '{{ route("admin.backup.index") }}',     icon: 'bi bi-database',      category: 'Admin' },

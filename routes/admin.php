@@ -42,6 +42,9 @@ Route::prefix('admin')
         Route::get('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
         Route::delete('/activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'destroy'])->name('activity-logs.destroy');
 
+        // Health Dashboard
+        Route::get('/health', [\App\Http\Controllers\Admin\HealthController::class, 'index'])->name('health.index');
+
         // Log Viewer
         Route::get('/logs', [\App\Http\Controllers\Admin\LogViewerController::class, 'index'])->name('logs.index');
         Route::delete('/logs', [\App\Http\Controllers\Admin\LogViewerController::class, 'clear'])->name('logs.clear');
