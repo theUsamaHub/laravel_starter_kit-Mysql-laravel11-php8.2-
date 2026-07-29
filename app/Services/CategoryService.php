@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Category;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -44,11 +45,19 @@ class CategoryService
 
     public function create(array $data): Category
     {
+        if (!empty($data['published_at']) && Carbon::parse($data['published_at'])->isFuture()) {
+            $data['is_active'] = false;
+        }
+
         return Category::create($data);
     }
 
     public function update(Category $category, array $data): Category
     {
+        if (!empty($data['published_at']) && Carbon::parse($data['published_at'])->isFuture()) {
+            $data['is_active'] = false;
+        }
+
         $category->update($data);
         return $category->fresh();
     }
