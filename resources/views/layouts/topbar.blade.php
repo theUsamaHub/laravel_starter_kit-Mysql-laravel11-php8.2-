@@ -9,9 +9,14 @@
 
     <div class="ms-auto d-flex align-items-center">
         <!-- Command Palette Trigger -->
-        <button class="btn btn-link text-dark p-1 me-3 d-none d-md-flex align-items-center" onclick="window.dispatchEvent(new CustomEvent('toggle-command-palette'))" title="Ctrl+K to open command palette">
-            <i class="bi bi-search fs-5"></i>
-            <small class="ms-1 text-muted" style="font-size:0.7rem;"><kbd class="bg-light px-1 rounded border">Ctrl</kbd>+<kbd class="bg-light px-1 rounded border">K</kbd></small>
+        <button class="btn btn-sm btn-outline-secondary me-3 d-none d-md-flex align-items-center gap-2 px-3 py-1" onclick="window.dispatchEvent(new CustomEvent('toggle-command-palette'))" title="Ctrl+K" style="border-radius:6px;border-color:#dee2e6;">
+            <i class="bi bi-search" style="font-size:0.8rem;"></i>
+            <span class="text-muted" style="font-size:0.8rem;">Search</span>
+            <div class="d-flex align-items-center gap-1" style="font-size:0.6rem;">
+                <kbd class="px-1 rounded" style="background:#f0f0f0;border:1px solid #d0d0d0;padding:0 3px;">Ctrl</kbd>
+                <span class="text-muted">+</span>
+                <kbd class="px-1 rounded" style="background:#f0f0f0;border:1px solid #d0d0d0;padding:0 3px;">K</kbd>
+            </div>
         </button>
 
         <!-- Notifications -->
