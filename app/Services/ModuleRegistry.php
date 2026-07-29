@@ -134,6 +134,13 @@ class ModuleRegistry
                 'capabilities' => ['view'],
                 'route_prefix' => 'admin.notifications',
             ],
+            'SubscriberController' => [
+                'slug' => 'subscribers',
+                'name' => 'Subscribers',
+                'controller' => "App\\Http\\Controllers\\Admin\\{$controllerName}",
+                'capabilities' => ['view', 'clear'],
+                'route_prefix' => 'admin.subscribers',
+            ],
             default => null,
         };
     }

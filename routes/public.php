@@ -23,3 +23,5 @@ Route::get('/services', function () {
 Route::get('/contact', function () {
     return view('public.contact');
 })->name('public.contact');
+
+Route::post('/subscribe', [\App\Http\Controllers\SubscriberController::class, 'store'])->name('public.subscribe');
