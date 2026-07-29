@@ -1,149 +1,58 @@
 # Laravel Starter Kit
 
-A production-ready Laravel 13 starter kit built with Bootstrap 5, Sanctum, and clean architecture principles. Designed to evolve into any application: HR, CRM, ERP, E-Commerce, Booking Systems, and more.
+A production-ready Laravel 13 starter kit with 17+ admin modules, RBAC, REST API, Bootstrap 5, and clean architecture. Scales from side projects to enterprise systems.
+
+## What's Included
+
+- **Full Admin Panel** — Dashboard, Categories, Users, Roles & Permissions, Media Library, Tags, Contacts, Subscribers, Settings, Activity Logs, Notifications, Sessions, IP Restrictions, Maintenance Mode, Health Dashboard, Log Viewer, Database Backup, Dynamic Validation Rules
+- **RBAC** — Role-based access control with auto-discovered permissions from admin controllers
+- **REST API v1** — Sanctum auth, CRUD endpoints, JSON Resources
+- **Public Pages** — Welcome, About, Services, Contact (with form), Pricing
+- **Authentication** — Web (Breeze) + API (Sanctum), email verification, password reset, rate limiting
+- **Scheduled Publishing** — Future publish/unpublish dates for content
+- **In-App Notifications** — Bell dropdown with unread badge, email + database channels
+- **SMTP Config from Admin** — No .env editing needed for mail settings
+- **Database Backups** — PostgreSQL dumps from admin UI
+- **Performance Optimized** — Cached settings, eager-loaded relationships, aggregated queries, 25+ DB indexes
+- **Bootstrap 5 + Alpine.js** — Responsive UI, dark sidebar, command palette (Ctrl+K)
+
+## Quick Start
+
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+npm run build
+composer dev
+```
+
+Visit `http://localhost:8000` — login as `admin@example.com` / `password`.
+
+## Full Documentation
+
+See the [docs/](docs/) folder for complete guides:
+
+| Document | Description |
+|----------|-------------|
+| [Getting Started](docs/getting-started.md) | Installation, requirements, first run |
+| [Architecture](docs/architecture.md) | Directory structure, patterns, design decisions |
+| [Admin Panel](docs/admin-panel.md) | Full admin module reference |
+| [Customization](docs/customization.md) | Branding, new modules, public pages, API endpoints |
+| [Development Guide](docs/development.md) | Services, traits, caching, coding standards |
 
 ## Tech Stack
 
-- **PHP** 8.3+
-- **Laravel** 13
-- **MySQL** (configurable)
-- **Bootstrap** 5.3
-- **Vite** 8
-- **Laravel Breeze** (authentication)
-- **Laravel Sanctum** (API tokens)
-
-## Requirements
-
-- PHP 8.3+
-- Composer
-- Node.js 18+
-- MySQL 8.0+
-
-## Installation
-
-```bash
-# Clone the repository
-git clone <repo-url>
-cd Laravel_Starter_Kit
-
-# Install dependencies
-composer install
-npm install
-
-# Setup environment
-cp .env.example .env
-php artisan key:generate
-
-# Configure .env with your database credentials
-
-# Run migrations and seeders
-php artisan migrate --seed
-
-# Build assets
-npm run build
-
-# Start development server
-php artisan serve
-```
-
-## Default Credentials
-
-| Role  | Email            | Password |
-|-------|------------------|----------|
-| Admin | admin@example.com| password |
-| User  | user@example.com | password |
-
-## Architecture
-
-```
-app/
-├── Actions/          # Single-purpose action classes
-├── Console/          # Artisan commands
-├── Events/           # Event classes
-├── Exceptions/       # Exception handling
-├── Helpers/          # Global helper functions
-├── Http/
-│   ├── Controllers/
-│   │   ├── Admin/    # Admin panel controllers
-│   │   ├── Api/V1/   # API v1 controllers
-│   │   └── Auth/     # Breeze auth controllers
-│   ├── Middleware/    # Custom middleware
-│   ├── Requests/     # Form request validation
-│   └── Resources/    # API resources
-├── Listeners/        # Event listeners
-├── Mail/             # Mailable classes
-├── Models/           # Eloquent models
-├── Notifications/    # Notification classes
-├── Observers/        # Model observers
-├── Policies/         # Authorization policies
-├── Providers/        # Service providers
-├── Repositories/     # Repository pattern
-├── Rules/            # Custom validation rules
-├── Services/         # Business logic layer
-├── Support/          # Support utilities
-├── Traits/           # Reusable traits
-└── View/Components/  # Blade view components
-```
-
-## Routes
-
-### Web Routes (`routes/web.php`)
-- `/` - Home page
-- `/dashboard` - Authenticated dashboard
-
-### Auth Routes (`routes/auth.php`)
-- `/login`, `/register`, `/forgot-password`, `/reset-password`
-- `/verify-email`, `/confirm-password`, `/logout`
-
-### Admin Routes (`routes/admin.php`)
-- `/admin` - Admin dashboard
-- `/admin/categories` - Category CRUD
-
-### API Routes (`routes/api.php`)
-- `POST /api/v1/auth/register` - Register
-- `POST /api/v1/auth/login` - Login
-- `POST /api/v1/auth/logout` - Logout
-- `GET /api/v1/user` - Current user
-- `PUT /api/v1/profile` - Update profile
-- `GET|POST|PUT|DELETE /api/v1/categories` - Category CRUD
-
-### Public Routes (`routes/public.php`)
-- `/about`, `/services`, `/contact`
-
-## Role-Based Access Control (RBAC)
-
-| Role  | Access |
-|-------|--------|
-| Admin | Full system access, admin panel |
-| User  | Dashboard, profile, own resources |
-
-## Adding a New Module
-
-1. Create migration: `php artisan make:migration create_<table>_table`
-2. Create model: `php artisan make:model <Model> -mf`
-3. Create service: `app/Services/<Model>Service.php`
-4. Create controller: `app/Http/Controllers/Admin/<Model>Controller.php`
-5. Create form request: `app/Http/Requests/<Model>Request.php`
-6. Create views: `resources/views/admin/<models>/`
-7. Add routes in `routes/admin.php`
-8. Add API routes in `routes/api.php`
-9. Create API resource: `app/Http/Resources/<Model>Resource.php`
-10. Seed data: `database/seeders/<Model>Seeder.php`
-
-## Design Tokens
-
-CSS custom properties in `resources/css/app.scss`:
-- `--bs-primary`: Primary brand color (#4f46e5)
-- `--bs-link-color`: Link color
-- `--bs-body-font-family`: Body font
-
-## Contributing
-
-Follow PSR-12 coding standards. Use Laravel Pint for formatting:
-```bash
-./vendor/bin/pint
-```
+- **Laravel 13** — PHP 8.3+
+- **Bootstrap 5.3** + **Bootstrap Icons** — SCSS build via Vite
+- **Alpine.js** — Frontend interactivity
+- **Vite 8** — Build tool with HMR
+- **Laravel Sanctum** — API token auth
+- **PostgreSQL** (primary) / **SQLite** (tests)
+- **Database Queue** — Default queue driver
+- **Quill Editor** — MIT-licensed WYSIWYG
 
 ## License
 
-MIT License.
+This is a commercial product. See LICENSE file for details.
