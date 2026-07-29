@@ -13,6 +13,7 @@
 
         <!-- Styles -->
         @vite(['resources/css/app.scss', 'resources/js/app.js'])
+        <style>[x-cloak] { display: none !important; }</style>
     </head>
     <body>
         <div class="d-flex">
@@ -40,5 +41,6 @@
         </div>
 
         @stack('scripts')
+        @include('partials.command-palette')
     </body>
 </html>
