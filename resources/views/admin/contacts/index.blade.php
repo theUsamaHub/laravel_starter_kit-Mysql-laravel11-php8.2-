@@ -12,14 +12,50 @@
         </div>
     @endif
 
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-start border-primary border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Total') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['total'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-start border-info border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('New') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['new'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-start border-warning border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Read') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['read'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-start border-success border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Replied') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['replied'] }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Search & Filters -->
     <div class="card mb-4">
         <div class="card-body">
             <form method="GET" action="{{ route('admin.contacts.index') }}" class="row g-3">
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <input type="text" class="form-control" name="search" placeholder="{{ __('Search messages...') }}" value="{{ request('search') }}">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <select class="form-select" name="status">
                         <option value="">{{ __('All Status') }}</option>
                         <option value="new" {{ request('status') === 'new' ? 'selected' : '' }}>{{ __('New') }}</option>
@@ -27,10 +63,17 @@
                         <option value="replied" {{ request('status') === 'replied' ? 'selected' : '' }}>{{ __('Replied') }}</option>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-outline-secondary w-100">
+                <div class="col-md-2">
+                    <input type="date" class="form-control" name="from" value="{{ request('from') }}" placeholder="{{ __('From date') }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" class="form-control" name="to" value="{{ request('to') }}" placeholder="{{ __('To date') }}">
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-outline-secondary flex-grow-1">
                         <i class="bi bi-search me-1"></i>{{ __('Filter') }}
                     </button>
+                    <a href="{{ route('admin.contacts.index') }}" class="btn btn-outline-danger"><i class="bi bi-x"></i></a>
                 </div>
             </form>
         </div>

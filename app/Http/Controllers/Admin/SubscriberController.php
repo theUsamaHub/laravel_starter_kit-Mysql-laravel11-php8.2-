@@ -28,9 +28,23 @@ class SubscriberController extends Controller
             $query->whereNotNull('unsubscribed_at');
         }
 
+        if ($from = $request->input('from')) {
+            $query->whereDate('subscribed_at', '>=', $from);
+        }
+
+        if ($to = $request->input('to')) {
+            $query->whereDate('subscribed_at', '<=', $to);
+        }
+
         $subscribers = $query->latest()->paginate(30);
 
-        return view('admin.subscribers.index', compact('subscribers'));
+        $stats = [
+            'total' => Subscriber::count(),
+            'active' => Subscriber::active()->count(),
+            'unsubscribed' => Subscriber::whereNotNull('unsubscribed_at')->count(),
+        ];
+
+        return view('admin.subscribers.index', compact('subscribers', 'stats'));
     }
 
     public function destroy(Subscriber $subscriber): RedirectResponse
@@ -40,9 +54,32 @@ class SubscriberController extends Controller
         return back()->with('success', 'Subscriber deleted.');
     }
 
-    public function export(): StreamedResponse
+    public function export(Request $request): StreamedResponse
     {
-        $subscribers = Subscriber::active()->get();
+        $query = Subscriber::query();
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('email', 'like', "%{$search}%")
+                  ->orWhere('name', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->input('filter') === 'unsubscribed') {
+            $query->whereNotNull('unsubscribed_at');
+        } else {
+            $query->active();
+        }
+
+        if ($from = $request->input('from')) {
+            $query->whereDate('subscribed_at', '>=', $from);
+        }
+
+        if ($to = $request->input('to')) {
+            $query->whereDate('subscribed_at', '<=', $to);
+        }
+
+        $subscribers = $query->latest()->get();
 
         $headers = [
             'Content-Type' => 'text/csv',

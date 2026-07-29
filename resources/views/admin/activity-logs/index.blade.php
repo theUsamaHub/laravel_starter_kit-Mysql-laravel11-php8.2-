@@ -12,10 +12,42 @@
         </div>
     </x-slot>
 
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-start border-secondary border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Total Logs') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['total'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-start border-info border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Today') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['today'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-start border-primary border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Event Breakdown') }}</div>
+                    <div class="d-flex gap-3 mt-1">
+                        <small><span class="d-inline-block rounded-circle me-1" style="width:8px;height:8px;background:var(--bs-success);"></span>{{ __('Created') }} {{ $stats['events']['created'] ?? 0 }}</small>
+                        <small><span class="d-inline-block rounded-circle me-1" style="width:8px;height:8px;background:var(--bs-warning);"></span>{{ __('Updated') }} {{ $stats['events']['updated'] ?? 0 }}</small>
+                        <small><span class="d-inline-block rounded-circle me-1" style="width:8px;height:8px;background:var(--bs-danger);"></span>{{ __('Deleted') }} {{ $stats['events']['deleted'] ?? 0 }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card mb-4"><div class="card-body">
         <form method="GET" class="row g-3">
-            <div class="col-md-4"><input type="text" class="form-control" name="search" placeholder="{{ __('Search...') }}" value="{{ request('search') }}"></div>
-            <div class="col-md-3">
+            <div class="col-md-3"><input type="text" class="form-control" name="search" placeholder="{{ __('Search...') }}" value="{{ request('search') }}"></div>
+            <div class="col-md-2">
                 <select class="form-select" name="event">
                     <option value="">{{ __('All Events') }}</option>
                     <option value="created" {{ request('event') === 'created' ? 'selected' : '' }}>{{ __('Created') }}</option>
@@ -23,7 +55,16 @@
                     <option value="deleted" {{ request('event') === 'deleted' ? 'selected' : '' }}>{{ __('Deleted') }}</option>
                 </select>
             </div>
-            <div class="col-md-3"><button class="btn btn-outline-secondary w-100"><i class="bi bi-search me-1"></i>{{ __('Filter') }}</button></div>
+            <div class="col-md-2">
+                <input type="date" class="form-control" name="from" value="{{ request('from') }}" placeholder="{{ __('From') }}">
+            </div>
+            <div class="col-md-2">
+                <input type="date" class="form-control" name="to" value="{{ request('to') }}" placeholder="{{ __('To') }}">
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button class="btn btn-outline-secondary flex-grow-1"><i class="bi bi-search me-1"></i>{{ __('Filter') }}</button>
+                <a href="{{ route('admin.activity-logs.index') }}" class="btn btn-outline-danger"><i class="bi bi-x"></i></a>
+            </div>
         </form>
     </div></div>
 

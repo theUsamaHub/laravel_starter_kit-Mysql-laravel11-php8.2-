@@ -3,28 +3,71 @@
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="h4 mb-0 fw-semibold">{{ __('Subscribers') }}</h2>
             <div class="d-flex gap-2">
-                <a href="{{ route('admin.subscribers.export') }}" class="btn btn-outline-success btn-sm">
+                <a href="{{ route('admin.subscribers.export') . '?' . http_build_query(request()->only(['search', 'filter', 'from', 'to'])) }}" class="btn btn-outline-success btn-sm">
                     <i class="bi bi-download me-1"></i>{{ __('Export CSV') }}
                 </a>
             </div>
         </div>
     </x-slot>
 
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-start border-primary border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Total') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['total'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-start border-success border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Active') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['active'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-start border-secondary border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Unsubscribed') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['unsubscribed'] }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
     <div class="card mb-4">
         <div class="card-body">
             <form method="GET" class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <input type="text" class="form-control" name="search" placeholder="{{ __('Search email or name...') }}" value="{{ request('search') }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <select class="form-select" name="filter">
                         <option value="">{{ __('All') }}</option>
                         <option value="active" {{ request('filter') === 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
                         <option value="unsubscribed" {{ request('filter') === 'unsubscribed' ? 'selected' : '' }}>{{ __('Unsubscribed') }}</option>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-outline-secondary w-100"><i class="bi bi-search me-1"></i>{{ __('Filter') }}</button>
+                <div class="col-md-2">
+                    <input type="date" class="form-control" name="from" value="{{ request('from') }}" placeholder="{{ __('From date') }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" class="form-control" name="to" value="{{ request('to') }}" placeholder="{{ __('To date') }}">
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-outline-secondary flex-grow-1"><i class="bi bi-search me-1"></i>{{ __('Filter') }}</button>
+                    <a href="{{ route('admin.subscribers.index') }}" class="btn btn-outline-danger"><i class="bi bi-x"></i></a>
                 </div>
             </form>
         </div>

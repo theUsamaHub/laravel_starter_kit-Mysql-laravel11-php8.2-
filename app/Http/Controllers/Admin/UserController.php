@@ -23,9 +23,19 @@ class UserController extends Controller
             });
         }
 
+        if ($role = $request->input('role')) {
+            $query->whereHas('roles', fn($q) => $q->where('slug', $role));
+        }
+
         $users = $query->latest()->paginate(15);
 
-        return view('admin.users.index', compact('users'));
+        $stats = [
+            'total' => User::count(),
+            'admins' => User::whereHas('roles', fn($q) => $q->where('slug', 'admin'))->count(),
+            'verified' => User::whereNotNull('email_verified_at')->count(),
+        ];
+
+        return view('admin.users.index', compact('users', 'stats'));
     }
 
     public function show(User $user): View

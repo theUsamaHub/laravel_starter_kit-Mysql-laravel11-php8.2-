@@ -29,9 +29,23 @@ class ActivityLogController extends Controller
             });
         }
 
+        if ($from = $request->input('from')) {
+            $query->whereDate('created_at', '>=', $from);
+        }
+
+        if ($to = $request->input('to')) {
+            $query->whereDate('created_at', '<=', $to);
+        }
+
         $logs = $query->latest()->paginate(30);
 
-        return view('admin.activity-logs.index', compact('logs'));
+        $stats = [
+            'total' => ActivityLog::count(),
+            'today' => ActivityLog::whereDate('created_at', today())->count(),
+            'events' => ActivityLog::selectRaw('event, count(*) as count')->groupBy('event')->pluck('count', 'event'),
+        ];
+
+        return view('admin.activity-logs.index', compact('logs', 'stats'));
     }
 
     public function export(Request $request): StreamedResponse
@@ -51,6 +65,14 @@ class ActivityLogController extends Controller
                 $q->where('auditable_type', 'like', "%{$search}%")
                   ->orWhereHas('user', fn($uq) => $uq->where('name', 'like', "%{$search}%"));
             });
+        }
+
+        if ($from = $request->input('from')) {
+            $query->whereDate('created_at', '>=', $from);
+        }
+
+        if ($to = $request->input('to')) {
+            $query->whereDate('created_at', '<=', $to);
         }
 
         $logs = $query->latest()->get();

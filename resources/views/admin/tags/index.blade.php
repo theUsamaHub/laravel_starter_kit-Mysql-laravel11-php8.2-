@@ -6,11 +6,32 @@
         </div>
     </x-slot>
 
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-start border-warning border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Total Tags') }}</div>
+                    <div class="fs-4 fw-bold">{{ \App\Models\Tag::count() }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-start border-primary border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Categories Tagged') }}</div>
+                    <div class="fs-4 fw-bold">{{ \App\Models\Taggable::distinct('taggable_id')->count() }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card mb-4">
         <div class="card-body">
             <form method="GET" class="row g-3">
-                <div class="col-md-10"><input type="text" class="form-control" name="search" placeholder="{{ __('Search tags...') }}" value="{{ request('search') }}"></div>
+                <div class="col-md-8"><input type="text" class="form-control" name="search" placeholder="{{ __('Search tags...') }}" value="{{ request('search') }}"></div>
                 <div class="col-md-2"><button type="submit" class="btn btn-outline-secondary w-100"><i class="bi bi-search me-1"></i>{{ __('Filter') }}</button></div>
+                <div class="col-md-2"><a href="{{ route('admin.tags.index') }}" class="btn btn-outline-danger w-100"><i class="bi bi-x"></i></a></div>
             </form>
         </div>
     </div>

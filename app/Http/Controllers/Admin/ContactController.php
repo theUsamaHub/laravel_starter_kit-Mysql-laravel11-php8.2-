@@ -26,9 +26,24 @@ class ContactController extends Controller
             $query->where('status', $status);
         }
 
+        if ($from = $request->input('from')) {
+            $query->whereDate('created_at', '>=', $from);
+        }
+
+        if ($to = $request->input('to')) {
+            $query->whereDate('created_at', '<=', $to);
+        }
+
         $contacts = $query->latest()->paginate(15);
 
-        return view('admin.contacts.index', compact('contacts'));
+        $stats = [
+            'total' => Contact::count(),
+            'new' => Contact::where('status', 'new')->count(),
+            'read' => Contact::where('status', 'read')->count(),
+            'replied' => Contact::where('status', 'replied')->count(),
+        ];
+
+        return view('admin.contacts.index', compact('contacts', 'stats'));
     }
 
     public function show(Contact $contact): View

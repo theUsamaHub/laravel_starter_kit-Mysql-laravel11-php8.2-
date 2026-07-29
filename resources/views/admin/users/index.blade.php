@@ -12,17 +12,53 @@
         </div>
     @endif
 
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-start border-primary border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Total Users') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['total'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-start border-danger border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Admins') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['admins'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-start border-success border-4 h-100">
+                <div class="card-body">
+                    <div class="text-muted" style="font-size:0.75rem;">{{ __('Verified') }}</div>
+                    <div class="fs-4 fw-bold">{{ $stats['verified'] }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Search -->
     <div class="card mb-4">
         <div class="card-body">
             <form method="GET" action="{{ route('admin.users.index') }}" class="row g-3">
-                <div class="col-md-9">
+                <div class="col-md-4">
                     <input type="text" class="form-control" name="search" placeholder="{{ __('Search users...') }}" value="{{ request('search') }}">
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" class="btn btn-outline-secondary w-100">
+                    <select class="form-select" name="role">
+                        <option value="">{{ __('All Roles') }}</option>
+                        <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>{{ __('Admin') }}</option>
+                        <option value="user" {{ request('role') === 'user' ? 'selected' : '' }}>{{ __('User') }}</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-outline-secondary flex-grow-1">
                         <i class="bi bi-search me-1"></i>{{ __('Filter') }}
                     </button>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-danger"><i class="bi bi-x"></i></a>
                 </div>
             </form>
         </div>
