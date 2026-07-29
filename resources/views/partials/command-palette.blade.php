@@ -7,25 +7,24 @@
 >
     <div x-show="open" x-transition.opacity class="position-fixed" style="inset:0;z-index:1055;background:rgba(0,0,0,0.5);" x-on:click="close()"></div>
 
-    <div x-show="open" x-transition class="position-fixed" style="top:10%;left:50%;transform:translateX(-50%);z-index:1056;width:100%;max-width:480px;">
-        <div class="card shadow-lg border-0">
+    <div x-show="open" x-transition class="position-fixed" style="top:10%;left:50%;transform:translateX(-50%);z-index:1056;width:100%;max-width:520px;">
+        <div class="card shadow border-0">
             <div class="card-body p-0">
                 <div class="p-3 border-bottom">
-                    <div class="input-group">
-                        <span class="input-group-text bg-transparent border-0">
-                            <i class="bi bi-search"></i>
-                        </span>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-search text-muted me-2"></i>
                         <input
                             type="text"
-                            class="form-control border-0 shadow-none"
+                            class="form-control border-0 shadow-none px-0"
                             x-ref="searchInput"
                             x-model="query"
                             placeholder="Search pages..."
+                            style="outline:none;font-size:0.95rem;"
                             x-on:keydown.prevent.enter="navigate()"
                             x-on:keydown.prevent.down="next()"
                             x-on:keydown.prevent.up="prev()"
                         >
-                        <span class="input-group-text bg-transparent border-0 text-muted"><kbd class="bg-light px-1 rounded" style="font-size:0.7rem;">ESC</kbd></span>
+                        <kbd class="bg-light px-2 py-1 rounded border text-muted" style="font-size:0.65rem;">ESC</kbd>
                     </div>
                 </div>
                 <ul class="list-unstyled mb-0" style="max-height:360px;overflow-y:auto;">
@@ -33,28 +32,28 @@
                         <li>
                             <a
                                 :href="item.url"
-                                class="d-flex align-items-center px-3 py-2 text-decoration-none"
-                                :class="index === activeIndex ? 'bg-primary text-white' : 'text-dark'"
+                                class="d-flex align-items-center px-3 py-2 text-decoration-none border-bottom border-light"
+                                :class="index === activeIndex ? 'bg-primary bg-opacity-10 text-primary' : 'text-dark'"
                                 @click.prevent="go(item)"
                                 @mouseenter="activeIndex = index"
                             >
-                                <i :class="item.icon" class="me-2" style="width:1.2rem;"></i>
-                                <span class="flex-grow-1" x-text="item.name"></span>
-                                <small class="opacity-50" x-text="item.category"></small>
+                                <i :class="item.icon" class="me-3 text-center" style="width:1.2rem;font-size:0.9rem;"></i>
+                                <span class="flex-grow-1" x-text="item.name" style="font-size:0.85rem;"></span>
+                                <span class="badge bg-light text-muted fw-normal" x-text="item.category" style="font-size:0.65rem;"></span>
                             </a>
                         </li>
                     </template>
                     <li x-show="filtered.length === 0 && query.length > 0">
-                        <div class="px-3 py-4 text-center text-muted">
-                            <i class="bi bi-search fs-4 d-block mb-1"></i>
-                            <small>No results for "<span x-text="query"></span>"</small>
+                        <div class="px-3 py-5 text-center text-muted">
+                            <i class="bi bi-search fs-3 d-block mb-2"></i>
+                            <small>No results for "<span x-text="query" class="fw-medium"></span>"</small>
                         </div>
                     </li>
                 </ul>
-                <div class="p-2 border-top bg-light d-flex gap-3 justify-content-center" style="font-size:0.7rem;">
-                    <span><kbd class="bg-white px-1 rounded">↑↓</kbd> Navigate</span>
-                    <span><kbd class="bg-white px-1 rounded">↵</kbd> Open</span>
-                    <span><kbd class="bg-white px-1 rounded">ESC</kbd> Close</span>
+                <div class="p-2 border-top d-flex gap-3 justify-content-center" style="font-size:0.65rem;">
+                    <span><kbd class="bg-white px-1 rounded border">↑</kbd> <kbd class="bg-white px-1 rounded border">↓</kbd> Navigate</span>
+                    <span><kbd class="bg-white px-1 rounded border">↵</kbd> Open</span>
+                    <span><kbd class="bg-white px-1 rounded border">ESC</kbd> Close</span>
                 </div>
             </div>
         </div>

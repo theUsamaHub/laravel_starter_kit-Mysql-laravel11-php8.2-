@@ -14,6 +14,7 @@
         <!-- Styles -->
         @vite(['resources/css/app.scss', 'resources/js/app.js'])
         <style>[x-cloak] { display: none !important; }</style>
+        @stack('styles')
     </head>
     <body>
         <div class="d-flex">
