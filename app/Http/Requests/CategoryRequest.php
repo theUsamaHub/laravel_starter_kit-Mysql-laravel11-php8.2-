@@ -34,6 +34,8 @@ class CategoryRequest extends FormRequest
             'attachments.*' => ['file', 'mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,xls,xlsx,csv', 'max:10240'],
             'is_active' => ['boolean'],
             'sort_order' => ['integer', 'min:0'],
+            'published_at' => ['nullable', 'date'],
+            'unpublish_at' => ['nullable', 'date', 'after_or_equal:published_at'],
             'remove_image' => ['nullable', 'boolean'],
         ];
 

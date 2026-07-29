@@ -65,6 +65,23 @@
                             </div>
                         </div>
 
+                        <hr>
+                        <div class="mb-3">
+                            <h6 class="fw-semibold mb-3">{{ __('Scheduling') }}</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <x-input-label for="published_at" :value="__('Publish At')" />
+                                    <x-text-input id="published_at" name="published_at" type="datetime-local" class="form-control" :value="old('published_at')" />
+                                    <small class="text-muted">{{ __('Leave empty to publish immediately.') }}</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <x-input-label for="unpublish_at" :value="__('Unpublish At')" />
+                                    <x-text-input id="unpublish_at" name="unpublish_at" type="datetime-local" class="form-control" :value="old('unpublish_at')" />
+                                    <small class="text-muted">{{ __('Leave empty for no expiry.') }}</small>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary">{{ __('Cancel') }}</a>
                             <x-primary-button>{{ __('Create Category') }}</x-primary-button>
