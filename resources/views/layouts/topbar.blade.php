@@ -113,9 +113,8 @@
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
-        sidebar.classList.toggle('d-none');
-        sidebar.classList.toggle('d-lg-flex');
-        overlay.style.display = sidebar.classList.contains('d-none') ? 'none' : 'block';
+        sidebar.classList.toggle('show-mobile');
+        overlay.style.display = sidebar.classList.contains('show-mobile') ? 'block' : 'none';
     }
 </script>
 @endpush
