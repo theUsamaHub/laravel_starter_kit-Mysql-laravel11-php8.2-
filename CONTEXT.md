@@ -290,7 +290,7 @@ Prefix `/api/v1`
 | `BackupController` | index/create/download/destroy | PostgreSQL SQL dumps (TRUNCATE + INSERT) |
 | `RoleController` | CRUD (no show) | Auto-discovered permissions from ModuleRegistry |
 | `TagController` | CRUD (no show) | Color picker, polymorphic tagging |
-| `SettingController` | index/update/store/destroy | Grouped by General/SEO/Social |
+| `SettingController` | index/update/store/destroy | Grouped by General/SEO/Social/Mail — SMTP config, multiple from-addresses |
 | `ValidationRuleController` | CRUD | Per-form dynamic rules |
 | `MediaController` | index/store/destroy | Search, MIME filter, thumbnails |
 
@@ -364,7 +364,7 @@ Pages with full filter+stats treatment:
 - **Default admin**: `admin@example.com` / `password` (role: admin)
 - **Default user**: `user@example.com` / `password` (role: user)
 - **Categories seeded**: Technology, Business, Healthcare, Education, Finance
-- **Settings seeded**: 14 defaults across general (app name, description, email, etc.), SEO (title, description, keywords), social (Facebook, Twitter, Instagram, LinkedIn)
+- **Settings seeded**: 14 defaults across general (app name, description, email, etc.), SEO (title, description, keywords), social (Facebook, Twitter, Instagram, LinkedIn), + 9 mail settings (driver, host, port, username, password, encryption, from address/name, additional from-addresses)
 - **Validation rules seeded**: 2 forms — `contact_form` (4 fields) and `user_register` (3 fields)
 
 ---
