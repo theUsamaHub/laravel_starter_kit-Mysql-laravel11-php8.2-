@@ -20,21 +20,85 @@
                 <div class="card-body">
                     @foreach ($items as $setting)
                         <div class="mb-3">
-                            <label for="settings_{{ $setting->key }}" class="form-label fw-medium">{{ ucfirst(str_replace('_', ' ', $setting->key)) }}</label>
+                            @php
+                                $label = ucfirst(str_replace('_', ' ', $setting->key));
+                                $key = $setting->key;
+                            @endphp
+                            <label for="settings_{{ $key }}" class="form-label fw-medium">{{ $label }}</label>
 
-                            @if ($setting->type === 'textarea')
-                                <textarea class="form-control" id="settings_{{ $setting->key }}" name="settings[{{ $setting->key }}]" rows="3">{{ $setting->value }}</textarea>
+                            @if ($key === 'mail_driver')
+                                <select class="form-select" id="settings_{{ $key }}" name="settings[{{ $key }}]">
+                                    <option value="log" {{ $setting->value === 'log' ? 'selected' : '' }}>Log (development)</option>
+                                    <option value="smtp" {{ $setting->value === 'smtp' ? 'selected' : '' }}>SMTP</option>
+                                    <option value="sendmail" {{ $setting->value === 'sendmail' ? 'selected' : '' }}>Sendmail</option>
+                                    <option value="ses" {{ $setting->value === 'ses' ? 'selected' : '' }}>Amazon SES</option>
+                                    <option value="postmark" {{ $setting->value === 'postmark' ? 'selected' : '' }}>Postmark</option>
+                                    <option value="mailgun" {{ $setting->value === 'mailgun' ? 'selected' : '' }}>Mailgun</option>
+                                </select>
+                            @elseif ($key === 'mail_encryption')
+                                <select class="form-select" id="settings_{{ $key }}" name="settings[{{ $key }}]">
+                                    <option value="">{{ __('None') }}</option>
+                                    <option value="tls" {{ $setting->value === 'tls' ? 'selected' : '' }}>TLS</option>
+                                    <option value="ssl" {{ $setting->value === 'ssl' ? 'selected' : '' }}>SSL</option>
+                                </select>
+                            @elseif ($key === 'mail_password')
+                                <input type="password" class="form-control" id="settings_{{ $key }}" name="settings[{{ $key }}]" value="{{ $setting->value }}" autocomplete="off">
+                            @elseif ($key === 'mail_additional_emails')
+                                <div id="additional-emails-container">
+                                    @php $additionalEmails = json_decode($setting->value ?: '[]', true); @endphp
+                                    @forelse ($additionalEmails as $i => $entry)
+                                        <div class="row g-2 mb-2 additional-email-row">
+                                            <div class="col-5">
+                                                <input type="text" class="form-control" name="settings[mail_additional_emails][{{ $i }}][name]" value="{{ $entry['name'] ?? '' }}" placeholder="{{ __('Name') }}">
+                                            </div>
+                                            <div class="col-5">
+                                                <input type="email" class="form-control" name="settings[mail_additional_emails][{{ $i }}][address]" value="{{ $entry['address'] ?? '' }}" placeholder="{{ __('Email') }}">
+                                            </div>
+                                            <div class="col-2">
+                                                <button type="button" class="btn btn-outline-danger w-100 remove-email-row"><i class="bi bi-x"></i></button>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <p class="text-muted" style="font-size:0.875rem;" id="no-additional-emails">{{ __('No additional from addresses configured.') }}</p>
+                                    @endforelse
+                                </div>
+                                <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-email-row">
+                                    <i class="bi bi-plus-circle me-1"></i>{{ __('Add Email Address') }}
+                                </button>
+                                <template id="email-row-template">
+                                    <div class="row g-2 mb-2 additional-email-row">
+                                        <div class="col-5">
+                                            <input type="text" class="form-control" name="settings[mail_additional_emails][__INDEX__][name]" placeholder="{{ __('Name') }}">
+                                        </div>
+                                        <div class="col-5">
+                                            <input type="email" class="form-control" name="settings[mail_additional_emails][__INDEX__][address]" placeholder="{{ __('Email') }}">
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-outline-danger w-100 remove-email-row"><i class="bi bi-x"></i></button>
+                                        </div>
+                                    </div>
+                                </template>
+                            @elseif ($setting->type === 'textarea')
+                                <textarea class="form-control" id="settings_{{ $key }}" name="settings[{{ $key }}]" rows="3">{{ $setting->value }}</textarea>
                             @elseif ($setting->type === 'boolean')
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" name="settings[{{ $setting->key }}]" value="1" id="settings_{{ $setting->key }}" {{ $setting->value ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="settings_{{ $setting->key }}">{{ __('Enabled') }}</label>
+                                    <input class="form-check-input" type="checkbox" name="settings[{{ $key }}]" value="1" id="settings_{{ $key }}" {{ $setting->value ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="settings_{{ $key }}">{{ __('Enabled') }}</label>
                                 </div>
                             @elseif ($setting->type === 'number')
-                                <input type="number" class="form-control" id="settings_{{ $setting->key }}" name="settings[{{ $setting->key }}]" value="{{ $setting->value }}">
+                                <input type="number" class="form-control" id="settings_{{ $key }}" name="settings[{{ $key }}]" value="{{ $setting->value }}">
                             @elseif ($setting->type === 'json')
-                                <textarea class="form-control font-monospace" id="settings_{{ $setting->key }}" name="settings[{{ $setting->key }}]" rows="3">{{ $setting->value }}</textarea>
+                                <textarea class="form-control font-monospace" id="settings_{{ $key }}" name="settings[{{ $key }}]" rows="3">{{ $setting->value }}</textarea>
                             @else
-                                <input type="text" class="form-control" id="settings_{{ $setting->key }}" name="settings[{{ $setting->key }}]" value="{{ $setting->value }}">
+                                <input type="text" class="form-control" id="settings_{{ $key }}" name="settings[{{ $key }}]" value="{{ $setting->value }}">
+                            @endif
+
+                            @if ($key === 'mail_driver')
+                                <small class="text-muted">{{ __('Select "Log" for development (emails written to log file), SMTP for production.') }}</small>
+                            @elseif ($key === 'mail_password')
+                                <small class="text-muted">{{ __('Leave empty to keep the current password.') }}</small>
+                            @elseif ($key === 'mail_additional_emails')
+                                <small class="text-muted">{{ __('Additional from addresses available when sending emails.') }}</small>
                             @endif
                         </div>
                     @endforeach
@@ -103,4 +167,35 @@
             </div>
         </div>
     </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('additional-emails-container');
+        const addBtn = document.getElementById('add-email-row');
+        const template = document.getElementById('email-row-template');
+
+        if (addBtn && template) {
+            let index = container?.querySelectorAll('.additional-email-row').length || 0;
+
+            addBtn.addEventListener('click', function() {
+                const noEmails = document.getElementById('no-additional-emails');
+                if (noEmails) noEmails.remove();
+
+                const html = template.innerHTML.replace(/__INDEX__/g, index++);
+                const div = document.createElement('div');
+                div.innerHTML = html;
+                container?.appendChild(div.firstElementChild);
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-email-row')) {
+                const row = e.target.closest('.additional-email-row');
+                if (row) row.remove();
+            }
+        });
+    });
+</script>
+@endpush
 </x-app-layout>

@@ -22,19 +22,29 @@ class SettingController extends Controller
     {
         $validated = $request->validate([
             'settings' => ['required', 'array'],
-            'settings.*' => ['nullable', 'string'],
         ]);
 
         foreach ($validated['settings'] as $key => $value) {
             $record = Setting::where('key', $key)->first();
-            if ($record) {
-                $typedValue = match ($record->type) {
-                    'boolean' => $value ? '1' : '0',
-                    'json' => is_string($value) ? $value : json_encode($value),
-                    default => $value,
-                };
-                $record->update(['value' => $typedValue]);
+            if (!$record) {
+                continue;
             }
+
+            // Skip empty password to keep existing
+            if ($key === 'mail_password' && empty($value)) {
+                continue;
+            }
+
+            if ($key === 'mail_additional_emails' && is_array($value)) {
+                $value = json_encode(array_values($value));
+            }
+
+            $typedValue = match ($record->type) {
+                'boolean' => $value ? '1' : '0',
+                'json' => is_string($value) ? $value : json_encode($value),
+                default => $value,
+            };
+            $record->update(['value' => $typedValue]);
         }
 
         return redirect()->route('admin.settings.index')

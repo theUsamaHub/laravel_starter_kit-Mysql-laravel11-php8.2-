@@ -32,6 +32,23 @@ class SettingsSeeder extends Seeder
             Setting::updateOrCreate(['key' => $setting['key']], $setting);
         }
 
+        // Mail settings
+        $mailSettings = [
+            ['group' => 'mail', 'key' => 'mail_driver', 'value' => 'log', 'type' => 'text'],
+            ['group' => 'mail', 'key' => 'mail_host', 'value' => '', 'type' => 'text'],
+            ['group' => 'mail', 'key' => 'mail_port', 'value' => '587', 'type' => 'number'],
+            ['group' => 'mail', 'key' => 'mail_username', 'value' => '', 'type' => 'text'],
+            ['group' => 'mail', 'key' => 'mail_password', 'value' => '', 'type' => 'text'],
+            ['group' => 'mail', 'key' => 'mail_encryption', 'value' => 'tls', 'type' => 'text'],
+            ['group' => 'mail', 'key' => 'mail_from_address', 'value' => 'hello@example.com', 'type' => 'text'],
+            ['group' => 'mail', 'key' => 'mail_from_name', 'value' => 'Laravel Starter Kit', 'type' => 'text'],
+            ['group' => 'mail', 'key' => 'mail_additional_emails', 'value' => '[]', 'type' => 'json'],
+        ];
+
+        foreach ($mailSettings as $setting) {
+            Setting::updateOrCreate(['key' => $setting['key']], $setting);
+        }
+
         // Default validation rules
         $rules = [
             [
