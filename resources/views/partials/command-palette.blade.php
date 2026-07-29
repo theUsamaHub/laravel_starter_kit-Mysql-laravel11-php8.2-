@@ -83,6 +83,7 @@ function commandPalette() {
             { name: 'Maintenance',        url: '{{ route("admin.maintenance.index") }}', icon: 'bi bi-shield-exclamation', category: 'Admin' },
             { name: 'Health Dashboard',   url: '{{ route("admin.health.index") }}',    icon: 'bi bi-heart-pulse',   category: 'Admin' },
             { name: 'IP Restrictions',    url: '{{ route("admin.ip-restrictions.index") }}', icon: 'bi bi-shield-lock', category: 'Admin' },
+            { name: 'Notifications',       url: '{{ route("admin.notifications.index") }}', icon: 'bi bi-bell',         category: 'Admin' },
             { name: 'Sessions',            url: '{{ route("admin.sessions.index") }}',    icon: 'bi bi-person-badge',  category: 'Admin' },
             { name: 'Activity Logs',      url: '{{ route("admin.activity-logs.index") }}', icon: 'bi bi-clock-history', category: 'Admin' },
             { name: 'Log Viewer',         url: '{{ route("admin.logs.index") }}',       icon: 'bi bi-journal-text',  category: 'Admin' },

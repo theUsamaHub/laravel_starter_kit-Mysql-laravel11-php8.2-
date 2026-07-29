@@ -20,7 +20,7 @@ class ContactFormNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -38,8 +38,10 @@ class ContactFormNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => "New contact from {$this->name}: {$this->subject}",
-            'action' => route('admin.contacts.index'),
+            'title' => "New contact from {$this->name}",
+            'body' => "Subject: {$this->subject}",
+            'type' => 'contact_message',
+            'action_url' => route('admin.contacts.index'),
         ];
     }
 }

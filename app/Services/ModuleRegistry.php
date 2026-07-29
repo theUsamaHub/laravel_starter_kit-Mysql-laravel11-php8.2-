@@ -127,6 +127,13 @@ class ModuleRegistry
                 'capabilities' => ['view'],
                 'route_prefix' => 'admin.maintenance',
             ],
+            'NotificationController' => [
+                'slug' => 'notifications',
+                'name' => 'Notifications',
+                'controller' => "App\\Http\\Controllers\\Admin\\{$controllerName}",
+                'capabilities' => ['view'],
+                'route_prefix' => 'admin.notifications',
+            ],
             default => null,
         };
     }
