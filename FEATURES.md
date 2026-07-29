@@ -42,7 +42,15 @@
 - Tagging support
 - Auto-slug generation
 - Sort order, active toggle, description, body
+- WYSIWYG editor (Quill — MIT licensed, free for commercial use) for description
+- Scheduled publishing (publish_at / unpublish_at with automatic cron)
+- Status badges: Active, Inactive, Scheduled, Expired
 - Audit trail (created/updated by, activity log)
+
+## Admin Panel — Recycle Bin
+- View soft-deleted categories in dedicated page
+- Restore individual items
+- Permanently delete (force-delete with media cleanup)
 
 ## Admin Panel — Tags
 - Full CRUD
@@ -77,11 +85,62 @@
 ## Admin Panel — Activity Logs
 - Filterable by event (created/updated/deleted), user, search
 - Truncate all logs
+- Export filtered logs to CSV (preserves current filters)
 
 ## Admin Panel — Log Viewer
 - Tail last 200 lines of Laravel log
 - Clear log file
 - Download log as laravel-{timestamp}.log
+
+## Admin Panel — Command Palette
+- Ctrl+K opens searchable navigation modal
+- Keyboard navigation (arrow keys, Enter, Esc)
+- Real-time filtering on every keystroke
+- Visible search button in top navbar with keyboard shortcut hint
+
+## Admin Panel — Health Dashboard
+- Database connection check
+- Cache accessibility test
+- Queue worker status
+- Storage disk usage percentage
+- PHP version, Laravel version, environment info
+- Application uptime (based on migration table)
+
+## Admin Panel — Maintenance Mode
+- DB-backed toggle (stores state via Setting model)
+- Custom maintenance message (configurable via admin)
+- Bypass routes — specify routes that stay accessible during maintenance
+- 503 error page renders dynamic message
+
+## Admin Panel — Session Manager
+- List all active sessions with user info, IP, user agent, last activity
+- Mark current session
+- Revoke individual sessions (cannot revoke own session)
+
+## Admin Panel — IP Restrictions
+- Middleware on admin route group
+- Whitelist IPs via admin UI (one per line)
+- Supports exact IP, CIDR ranges (e.g. 10.0.0.0/8), and wildcards (e.g. 203.0.113.*)
+- When whitelist is empty, all IPs are allowed
+- Shows current user's IP on management page
+
+## Admin Panel — In-App Notifications
+- Notification bell in top navbar with unread count badge
+- Dropdown shows recent 8 notifications with type icons
+- Full notifications page with filter (All / Unread)
+- Mark individual notifications as read
+- Mark all notifications as read
+- Delete individual notifications
+- Contact form submissions auto-create notifications for all admins
+
+## Admin Panel — Subscribers (Newsletter)
+- Manage email subscribers in admin panel
+- Filter by Active / Unsubscribed status
+- Search by email or name
+- Export active subscribers to CSV
+- Public subscribe endpoint (POST /subscribe)
+- Re-subscribe after unsubscribe
+- Newsletter subscription form partial for public pages
 
 ## Admin Panel — Database Backup
 - List backups with name, size, date
@@ -122,7 +181,9 @@
 - Activity summary on dashboard
 
 ## Notifications
-- Queueable contact form notification (email to all admins)
+- In-app database notifications with bell dropdown
+- Email notifications via queue
+- Contact form submission triggers notification for all admins (email + in-app)
 - Queueable welcome notification (email + database)
 
 ## Dynamic Validation
@@ -141,10 +202,15 @@
 - CSRF protection
 
 ## Database
-- 16 tables: users, roles, role_user, categories, media, tags, taggables, contacts, settings, activity_logs, validation_rules, sessions, cache, jobs, personal_access_tokens, failed_jobs
+- 19 tables: users, roles, role_user, categories, media, tags, taggables, contacts, settings, activity_logs, validation_rules, notifications, subscribers, sessions, cache, jobs, personal_access_tokens, failed_jobs, migrations
 - Soft deletes on categories
-- JSON columns for permissions, audit values
-- Polymorphic relationships (media, tags, activity logs)
+- UUID primary keys on notifications
+- JSON columns for permissions, audit values, notification data
+- Polymorphic relationships (media, tags, activity logs, notifications)
+
+## Scheduled Tasks
+- `app:process-scheduled-publishing` — publishes/unpublishes categories based on `published_at` / `unpublish_at`
+- Runs every minute via Laravel scheduler (configured in `bootstrap/app.php`)
 
 ## Developer Experience
 - Vite + Bootstrap 5 + Alpine.js frontend build
