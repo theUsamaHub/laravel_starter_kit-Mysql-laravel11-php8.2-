@@ -31,6 +31,9 @@ class ModuleRegistry
                 'LogViewerController',
                 'BackupController',
                 'ActivityLogController',
+                'HealthController',
+                'SessionController',
+                'MaintenanceController',
             ];
 
             if (in_array($file->getFilenameWithoutExtension(), $skipControllers)) {
@@ -95,6 +98,27 @@ class ModuleRegistry
                 'controller' => "App\\Http\\Controllers\\Admin\\{$controllerName}",
                 'capabilities' => ['view', 'clear'],
                 'route_prefix' => 'admin.activity-logs',
+            ],
+            'HealthController' => [
+                'slug' => 'health',
+                'name' => 'Health Dashboard',
+                'controller' => "App\\Http\\Controllers\\Admin\\{$controllerName}",
+                'capabilities' => ['view'],
+                'route_prefix' => 'admin.health',
+            ],
+            'SessionController' => [
+                'slug' => 'sessions',
+                'name' => 'Sessions',
+                'controller' => "App\\Http\\Controllers\\Admin\\{$controllerName}",
+                'capabilities' => ['view', 'revoke'],
+                'route_prefix' => 'admin.sessions',
+            ],
+            'MaintenanceController' => [
+                'slug' => 'maintenance',
+                'name' => 'Maintenance',
+                'controller' => "App\\Http\\Controllers\\Admin\\{$controllerName}",
+                'capabilities' => ['view'],
+                'route_prefix' => 'admin.maintenance',
             ],
             default => null,
         };
