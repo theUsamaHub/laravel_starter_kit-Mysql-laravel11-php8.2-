@@ -35,7 +35,7 @@
                     </span>
                 @endif
             </button>
-            <div class="dropdown-menu dropdown-menu-end" style="width: 360px;" :class="{ show: open }">
+            <div class="dropdown-menu dropdown-menu-end" style="width:360px;max-width:90vw;right:0;left:auto;" :class="{ show: open }">
                 <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
                     <h6 class="mb-0 fw-semibold" style="font-size: 0.875rem;">{{ __('Notifications') }}</h6>
                     <div>
