@@ -51,17 +51,17 @@
             <div class="container py-5">
                 <div class="text-center mb-5">
                     <h2 class="fw-bold">{{ __('Everything you need') }}</h2>
-                    <p class="text-muted">{{ __('Built with best practices, ready for production.') }}</p>
+                    <p class="text-muted">{{ __('17+ admin modules, REST API, RBAC, and production-ready tooling.') }}</p>
                 </div>
                 <div class="row g-4">
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body p-4">
                                 <div class="bg-primary bg-opacity-10 rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
-                                    <i class="bi bi-shield-check text-primary fs-4"></i>
+                                    <i class="bi bi-speedometer2 text-primary fs-4"></i>
                                 </div>
-                                <h5 class="fw-semibold">{{ __('Authentication') }}</h5>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('Secure login, registration, password reset, email verification, and RBAC built-in.') }}</p>
+                                <h5 class="fw-semibold">{{ __('Admin Dashboard') }}</h5>
+                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('Analytics with stats widgets, 7-day charts, activity summary, recent users, and quick action buttons.') }}</p>
                             </div>
                         </div>
                     </div>
@@ -69,10 +69,10 @@
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body p-4">
                                 <div class="bg-success bg-opacity-10 rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
-                                    <i class="bi bi-hdd-stack text-success fs-4"></i>
+                                    <i class="bi bi-tags text-success fs-4"></i>
                                 </div>
-                                <h5 class="fw-semibold">{{ __('API Ready') }}</h5>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('Sanctum-powered API with versioning, resources, and token authentication.') }}</p>
+                                <h5 class="fw-semibold">{{ __('Content & Categories') }}</h5>
+                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('WYSIWYG editor, image uploads, tags, soft deletes, recycle bin, and scheduled publishing with cron.') }}</p>
                             </div>
                         </div>
                     </div>
@@ -80,10 +80,10 @@
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body p-4">
                                 <div class="bg-warning bg-opacity-10 rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
-                                    <i class="bi bi-layers text-warning fs-4"></i>
+                                    <i class="bi bi-shield-check text-warning fs-4"></i>
                                 </div>
-                                <h5 class="fw-semibold">{{ __('Clean Architecture') }}</h5>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('Service layer, repository pattern, SOLID principles, and scalable folder structure.') }}</p>
+                                <h5 class="fw-semibold">{{ __('RBAC & Permissions') }}</h5>
+                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('Multi-role system with auto-discovered module permissions, admin bypass, and per-action access control.') }}</p>
                             </div>
                         </div>
                     </div>
@@ -91,10 +91,10 @@
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body p-4">
                                 <div class="bg-info bg-opacity-10 rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
-                                    <i class="bi bi-phone text-info fs-4"></i>
+                                    <i class="bi bi-hdd-stack text-info fs-4"></i>
                                 </div>
-                                <h5 class="fw-semibold">{{ __('Bootstrap 5') }}</h5>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('Responsive, modern UI with Bootstrap 5, reusable components, and consistent design.') }}</p>
+                                <h5 class="fw-semibold">{{ __('REST API') }}</h5>
+                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('Versioned API via Sanctum with token auth, JSON resources, and full CRUD for categories and users.') }}</p>
                             </div>
                         </div>
                     </div>
@@ -102,10 +102,10 @@
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body p-4">
                                 <div class="bg-danger bg-opacity-10 rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
-                                    <i class="bi bi-gear text-danger fs-4"></i>
+                                    <i class="bi bi-shield-lock text-danger fs-4"></i>
                                 </div>
-                                <h5 class="fw-semibold">{{ __('CRUD Blueprint') }}</h5>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('Category module as a blueprint with search, pagination, soft deletes, and validation.') }}</p>
+                                <h5 class="fw-semibold">{{ __('Security & Monitoring') }}</h5>
+                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('IP whitelist (CIDR/wildcard), session manager, activity audit logs, health dashboard, and maintenance mode.') }}</p>
                             </div>
                         </div>
                     </div>
@@ -113,11 +113,95 @@
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body p-4">
                                 <div class="bg-secondary bg-opacity-10 rounded-3 d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
-                                    <i class="bi bi-arrow-up-right text-secondary fs-4"></i>
+                                    <i class="bi bi-bell text-secondary fs-4"></i>
                                 </div>
-                                <h5 class="fw-semibold">{{ __('Scalable') }}</h5>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('Evolves into any domain: HR, CRM, ERP, E-Commerce, Booking, and more.') }}</p>
+                                <h5 class="fw-semibold">{{ __('Notifications & Alerts') }}</h5>
+                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ __('In-app notification bell with dropdown, contact form alerts, newsletter subscribers, and CSV export.') }}</p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- More Features -->
+        <section class="py-5 bg-white">
+            <div class="container py-3">
+                <div class="text-center mb-5">
+                    <h3 class="fw-bold">{{ __('And much more') }}</h3>
+                    <p class="text-muted">{{ __('Every module is self-contained and production-ready.') }}</p>
+                </div>
+                <div class="row g-3 justify-content-center">
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-people text-primary"></i>
+                            <span style="font-size: 0.875rem;">{{ __('User management') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-bookmark text-success"></i>
+                            <span style="font-size: 0.875rem;">{{ __('Tag management') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-folder text-warning"></i>
+                            <span style="font-size: 0.875rem;">{{ __('Media library') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-envelope text-info"></i>
+                            <span style="font-size: 0.875rem;">{{ __('Contact inbox') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-shield-shaded text-danger"></i>
+                            <span style="font-size: 0.875rem;">{{ __('Validation rules') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-gear text-secondary"></i>
+                            <span style="font-size: 0.875rem;">{{ __('DB settings') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history text-primary"></i>
+                            <span style="font-size: 0.875rem;">{{ __('Activity logs') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-person-badge text-success"></i>
+                            <span style="font-size: 0.875rem;">{{ __('Session manager') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-database text-warning"></i>
+                            <span style="font-size: 0.875rem;">{{ __('DB backups') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-journal-text text-info"></i>
+                            <span style="font-size: 0.875rem;">{{ __('Log viewer') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-heart-pulse text-danger"></i>
+                            <span style="font-size: 0.875rem;">{{ __('Health checks') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-shield-exclamation text-secondary"></i>
+                            <span style="font-size: 0.875rem;">{{ __('Maintenance mode') }}</span>
                         </div>
                     </div>
                 </div>
