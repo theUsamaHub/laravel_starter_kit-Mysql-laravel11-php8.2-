@@ -9,7 +9,7 @@
 
     <div class="ms-auto d-flex align-items-center">
         <!-- Command Palette Trigger -->
-        <button class="btn btn-link text-dark p-1 me-3 d-none d-md-flex align-items-center" onclick="document.dispatchEvent(new KeyboardEvent('keydown', {key: 'k', ctrlKey: true}))" title="Ctrl+K to open command palette">
+        <button class="btn btn-link text-dark p-1 me-3 d-none d-md-flex align-items-center" onclick="window.dispatchEvent(new CustomEvent('toggle-command-palette'))" title="Ctrl+K to open command palette">
             <i class="bi bi-search fs-5"></i>
             <small class="ms-1 text-muted" style="font-size:0.7rem;"><kbd class="bg-light px-1 rounded border">Ctrl</kbd>+<kbd class="bg-light px-1 rounded border">K</kbd></small>
         </button>
