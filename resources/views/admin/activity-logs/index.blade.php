@@ -2,10 +2,13 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="h4 mb-0 fw-semibold">{{ __('Activity Log') }}</h2>
-            <form action="{{ route('admin.activity-logs.destroy') }}" method="POST" onsubmit="return confirm('{{ __('Clear all logs?') }}')">
-                @csrf @method('DELETE')
-                <button class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>{{ __('Clear Logs') }}</button>
-            </form>
+            <div class="d-flex gap-2">
+                <a href="{{ route('admin.activity-logs.export') . '?' . http_build_query(request()->only(['search', 'event', 'user_id'])) }}" class="btn btn-outline-success btn-sm"><i class="bi bi-download me-1"></i>{{ __('Export CSV') }}</a>
+                <form action="{{ route('admin.activity-logs.destroy') }}" method="POST" onsubmit="return confirm('{{ __('Clear all logs?') }}')">
+                    @csrf @method('DELETE')
+                    <button class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>{{ __('Clear Logs') }}</button>
+                </form>
+            </div>
         </div>
     </x-slot>
 
@@ -17,7 +20,7 @@
                     <option value="">{{ __('All Events') }}</option>
                     <option value="created" {{ request('event') === 'created' ? 'selected' : '' }}>{{ __('Created') }}</option>
                     <option value="updated" {{ request('event') === 'updated' ? 'selected' : '' }}>{{ __('Updated') }}</option>
-                    <option value="deleted" {{ request('event') === 'deleted' ? 'selected' : '' }}{{ __('Deleted') }}</option>
+                    <option value="deleted" {{ request('event') === 'deleted' ? 'selected' : '' }}>{{ __('Deleted') }}</option>
                 </select>
             </div>
             <div class="col-md-3"><button class="btn btn-outline-secondary w-100"><i class="bi bi-search me-1"></i>{{ __('Filter') }}</button></div>
