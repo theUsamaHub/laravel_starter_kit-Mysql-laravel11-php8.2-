@@ -14,7 +14,7 @@ class MaintenanceController extends Controller
     {
         $isMaintenance = Setting::get('maintenance_mode', false);
         $message = Setting::get('maintenance_message', 'We are currently performing scheduled maintenance. We will be back shortly.');
-        $bypassRoutes = Setting::get('maintenance_bypass_routes', 'login,register,forgot-password,reset-password*');
+        $bypassRoutes = Setting::get('maintenance_bypass_routes', 'login,register,forgot-password,reset-password*,admin/*');
 
         return view('admin.maintenance.index', compact('isMaintenance', 'message', 'bypassRoutes'));
     }

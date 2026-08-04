@@ -21,7 +21,7 @@ class MaintenanceModeMiddleware
         }
 
         // Allow auth routes so users can log in
-        $bypassRoutes = Setting::get('maintenance_bypass_routes', 'login,register,forgot-password,reset-password*');
+        $bypassRoutes = Setting::get('maintenance_bypass_routes', 'login,register,forgot-password,reset-password*,admin/*');
         $bypassPatterns = array_map('trim', explode(',', $bypassRoutes));
         foreach ($bypassPatterns as $pattern) {
             if ($request->is($pattern)) {
