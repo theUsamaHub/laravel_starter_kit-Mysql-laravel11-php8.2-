@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Taggable;
 use App\Models\Tag;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -23,7 +23,7 @@ class TagController extends Controller
 
         $tagCount = $tags->total();
 
-        $taggableCount = Taggable::distinct('taggable_id')->count('taggable_id');
+        $taggableCount = DB::table('taggables')->distinct('taggable_id')->count('taggable_id');
 
         $stats = [
             'tags_count' => $tagCount,

@@ -37,24 +37,35 @@ class BackupController extends Controller
         $filename = 'backup-' . now()->format('Y-m-d-His') . '.sql';
         $filepath = $backupPath . '/' . $filename;
 
-        $tables = DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'");
+        $driver = DB::getDriverName();
+        $tables = match ($driver) {
+            'mysql', 'mariadb' => array_map(fn($row) => array_values((array) $row)[0], DB::select('SHOW TABLES')),
+            'pgsql' => array_map(fn($row) => $row->tablename, DB::select("SELECT tablename FROM pg_tables WHERE schemaname = 'public'")),
+            'sqlite' => array_map(fn($row) => $row->name, DB::select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")),
+            default => [],
+        };
         $sql = "-- Laravel Starter Kit Database Backup\n";
         $sql .= "-- Date: " . now()->format('Y-m-d H:i:s') . "\n\n";
 
-        foreach ($tables as $table) {
-            $tableName = $table->tablename;
+        foreach ($tables as $tableName) {
             $rows = DB::table($tableName)->get();
 
             if ($rows->isEmpty()) continue;
 
             $sql .= "-- Table: {$tableName}\n";
-            $sql .= "TRUNCATE TABLE \"{$tableName}\" CASCADE;\n";
+            $sql .= match ($driver) {
+                'pgsql' => "TRUNCATE TABLE \"{$tableName}\" CASCADE;\n",
+                default => "TRUNCATE TABLE `{$tableName}`;\n",
+            };
 
             foreach ($rows as $row) {
                 $rowArray = (array) $row;
-                $columns = array_map(fn($k) => "\"{$k}\"", array_keys($rowArray));
+                $columns = match ($driver) {
+                    'pgsql' => array_map(fn($k) => "\"{$k}\"", array_keys($rowArray)),
+                    default => array_map(fn($k) => "`{$k}`", array_keys($rowArray)),
+                };
                 $values = array_map(fn($v) => $v === null ? 'NULL' : "'" . addslashes($v) . "'", array_values($rowArray));
-                $sql .= "INSERT INTO \"{$tableName}\" (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ");\n";
+                $sql .= "INSERT INTO `{$tableName}` (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ");\n";
             }
             $sql .= "\n";
         }
