@@ -55,4 +55,15 @@ class User extends Authenticatable
             $this->roles()->detach($role);
         }
     }
+
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->hasRole('admin')) {
+            return true;
+        }
+
+        return $this->roles->contains(function ($role) use ($permission) {
+            return $role->hasPermission($permission);
+        });
+    }
 }

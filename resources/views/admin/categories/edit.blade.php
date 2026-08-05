@@ -76,7 +76,7 @@
                                                     <div class="text-truncate mt-1" style="font-size: 0.65rem;">{{ $item->original_name }}</div>
                                                 </div>
                                                 <div class="card-footer bg-transparent p-1 text-center">
-                                                    <a href="{{ $item->url }}" target="_blank" class="btn btn-outline-info btn-sm" style="font-size: 0.6rem;"><i class="bi bi-eye"></i></a>
+                                                    <a href="{{ $item->url }}" class="btn btn-outline-info btn-sm" style="font-size: 0.6rem;"><i class="bi bi-eye"></i></a>
                                                 </div>
                                             </div>
                                         </div>

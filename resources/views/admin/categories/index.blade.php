@@ -2,9 +2,11 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="h4 mb-0 fw-semibold">{{ __('Categories') }}</h2>
+            @if(auth()->user()->hasPermission('category.create'))
             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary btn-sm">
                 <i class="bi bi-plus-circle me-1"></i>{{ __('Add Category') }}
             </a>
+            @endif
         </div>
     </x-slot>
 
@@ -74,13 +76,19 @@
                                 <td>{{ $category->createdBy?->name ?? '-' }}</td>
                                 <td class="text-muted">{{ $category->created_at->diffForHumans() }}</td>
                                 <td class="text-end">
+                                    @php $user = auth()->user(); @endphp
                                     <div class="btn-group btn-group-sm">
+                                        @if($user->hasPermission('category.view'))
                                         <a href="{{ route('admin.categories.show', $category) }}" class="btn btn-outline-info" title="{{ __('View') }}">
                                             <i class="bi bi-eye"></i>
                                         </a>
+                                        @endif
+                                        @if($user->hasPermission('category.edit'))
                                         <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-outline-primary" title="{{ __('Edit') }}">
                                             <i class="bi bi-pencil"></i>
                                         </a>
+                                        @endif
+                                        @if($user->hasPermission('category.delete'))
                                         <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Are you sure you want to delete this category?') }}')">
                                             @csrf
                                             @method('DELETE')
@@ -88,6 +96,7 @@
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -97,9 +106,11 @@
                                     <div class="empty-state">
                                         <i class="bi bi-tags"></i>
                                         <p>{{ __('No categories found.') }}</p>
+                                        @if($user->hasPermission('category.create'))
                                         <a href="{{ route('admin.categories.create') }}" class="btn btn-primary btn-sm mt-2">
                                             {{ __('Create your first category') }}
                                         </a>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

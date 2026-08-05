@@ -34,6 +34,9 @@
 - Delete roles (blocked if users assigned)
 - Permissions grouped by module in UI
 - Admin auto-bypass for all permissions
+- Per-route `permission:module.action` middleware on all admin routes
+- Sidebar links hidden/shown based on user permissions
+- `User::hasPermission()` helper checks roles and admin bypass
 
 ## Admin Panel — Categories
 - Full CRUD with soft deletes
@@ -193,13 +196,35 @@
 - Admin UI for managing rules
 
 ## Security
-- Role-based middleware (`role:admin`)
-- Permission-based middleware (`permission:module.action`)
-- Admin auto-bypass for all permissions
+- Role-based middleware (`role:admin`) — removed from route group, replaced by per-route permissions
+- Permission-based middleware (`permission:module.action`) applied to every admin route
+- Admin auto-bypass for all permissions (CheckPermission middleware + User::hasPermission)
+- Sidebar visibility based on user permissions
 - Email verification required for admin access
 - Password confirmation for sensitive actions
 - Login rate limiting
 - CSRF protection
+
+### Applied Permissions (all admin routes)
+| Module | Permissions |
+|--------|------------|
+| Categories | `category.view`, `category.create`, `category.edit`, `category.delete` |
+| Users | `user.view`, `user.edit`, `user.delete` |
+| Contacts | `contact.view`, `contact.delete` |
+| Media | `media.view`, `media.create`, `media.delete` |
+| Validation Rules | `validation_rule.view`, `validation_rule.create`, `validation_rule.edit`, `validation_rule.delete` |
+| Settings | `setting.view`, `setting.edit`, `setting.delete` |
+| Roles | `role.view`, `role.create`, `role.edit`, `role.delete` |
+| Tags | `tag.view`, `tag.create`, `tag.edit`, `tag.delete` |
+| Activity Logs | `activity.view`, `activity.clear` |
+| IP Restrictions | `ip_restriction.view`, `ip_restriction.edit` |
+| Notifications | `notification.view` |
+| Subscribers | `subscriber.view`, `subscriber.delete` |
+| Sessions | `sessions.view`, `sessions.revoke` |
+| Maintenance | `maintenance.view` |
+| Health | `health.view` |
+| Logs | `logs.view`, `logs.clear` |
+| Backup | `backup.view`, `backup.create` |
 
 ## Database
 - 19 tables: users, roles, role_user, categories, media, tags, taggables, contacts, settings, activity_logs, validation_rules, notifications, subscribers, sessions, cache, jobs, personal_access_tokens, failed_jobs, migrations

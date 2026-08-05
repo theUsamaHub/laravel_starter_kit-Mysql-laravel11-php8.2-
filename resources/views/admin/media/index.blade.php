@@ -73,7 +73,7 @@
                             <div class="text-muted" style="font-size: 0.65rem;">{{ $item->size_formatted }}</div>
                         </div>
                         <div class="card-footer bg-transparent p-1 text-center">
-                            <a href="{{ $item->url }}" target="_blank" class="btn btn-outline-info btn-sm" style="font-size: 0.7rem;"><i class="bi bi-eye"></i></a>
+                            <a href="{{ $item->url }}" class="btn btn-outline-info btn-sm" style="font-size: 0.7rem;"><i class="bi bi-eye"></i></a>
                             <form action="{{ route('admin.media.destroy', $item) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Delete this file?') }}')">
                                 @csrf
                                 @method('DELETE')

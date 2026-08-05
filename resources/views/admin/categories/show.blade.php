@@ -3,9 +3,11 @@
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="h4 mb-0 fw-semibold">{{ __('Category Details') }}</h2>
             <div class="d-flex gap-2">
+                @if(auth()->user()->hasPermission('category.edit'))
                 <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-outline-primary btn-sm">
                     <i class="bi bi-pencil me-1"></i>{{ __('Edit') }}
                 </a>
+                @endif
                 <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-arrow-left me-1"></i>{{ __('Back') }}
                 </a>
@@ -63,6 +65,7 @@
             </div>
         </div>
 
+        @if(auth()->user()->hasPermission('category.delete'))
         <div class="col-lg-4">
             <div class="card border-danger">
                 <div class="card-header">
@@ -82,5 +85,6 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 </x-app-layout>
