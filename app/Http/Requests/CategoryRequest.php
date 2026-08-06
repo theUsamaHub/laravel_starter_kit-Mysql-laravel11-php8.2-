@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -17,8 +16,7 @@ class CategoryRequest extends FormRequest
     {
         $categoryId = $this->route('category')?->id;
 
-        // Start with hardcoded base rules
-        $rules = [
+        return [
             'name' => ['required', 'string', 'max:255'],
             'slug' => [
                 'nullable',
@@ -38,25 +36,11 @@ class CategoryRequest extends FormRequest
             'unpublish_at' => ['nullable', 'date', 'after_or_equal:published_at'],
             'remove_image' => ['nullable', 'boolean'],
         ];
-
-        // Merge with dynamic rules from database if they exist
-        $dynamicRules = ValidationRule::getRules('category');
-        if (!empty($dynamicRules)) {
-            foreach ($dynamicRules as $field => $fieldRules) {
-                if (isset($rules[$field])) {
-                    $rules[$field] = array_merge($rules[$field], $fieldRules);
-                } else {
-                    $rules[$field] = $fieldRules;
-                }
-            }
-        }
-
-        return $rules;
     }
 
     public function messages(): array
     {
-        $baseMessages = [
+        return [
             'name.required' => 'Please enter a category name.',
             'name.max' => 'Category name cannot exceed 255 characters.',
             'slug.unique' => 'This slug is already taken.',
@@ -67,9 +51,5 @@ class CategoryRequest extends FormRequest
             'attachments.*.mimes' => 'The file must be a supported type (JPG, PNG, PDF, Excel, CSV).',
             'attachments.*.max' => 'Each file must not be larger than 10MB.',
         ];
-
-        // Merge with dynamic messages from database
-        $dynamicMessages = ValidationRule::getMessages('category');
-        return array_merge($baseMessages, $dynamicMessages);
     }
 }

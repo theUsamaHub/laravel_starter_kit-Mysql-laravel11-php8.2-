@@ -74,11 +74,6 @@
 - Create new settings, delete existing
 - Database-backed with caching
 
-## Admin Panel — Dynamic Validation Rules
-- Per-form validation rules stored in database
-- Custom error messages per field
-- Auto-merges with hardcoded rules
-- Full CRUD UI
 
 ## Admin Panel — Activity Logs
 - Filterable by event (created/updated/deleted), user, search
@@ -184,11 +179,6 @@
 - Contact form submission triggers notification for all admins (email + in-app)
 - Queueable welcome notification (email + database)
 
-## Dynamic Validation
-- Database-driven validation rules per form name
-- Hardcoded + dynamic rule merging
-- Custom error messages from database
-- Admin UI for managing rules
 
 ## Security
 - Role-based middleware (`role:admin`) on all admin routes
@@ -200,7 +190,7 @@
 - CSRF protection
 
 ## Database
-- 19 tables: users, roles, role_user, categories, media, tags, taggables, contacts, settings, activity_logs, validation_rules, notifications, subscribers, sessions, cache, jobs, personal_access_tokens, failed_jobs, migrations
+- 18 tables: users, roles, role_user, categories, media, tags, taggables, contacts, settings, notifications, subscribers, sessions, cache, jobs, personal_access_tokens, failed_jobs, migrations
 - Soft deletes on categories
 - UUID primary keys on notifications
 - JSON columns for audit values, notification data

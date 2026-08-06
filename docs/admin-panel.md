@@ -64,12 +64,6 @@ Grouped settings editor:
 - **Social** — Facebook, Twitter, Instagram, LinkedIn URLs
 - **Mail** — SMTP configuration (driver, host, port, credentials, from address, additional emails)
 
-### Validation Rules
-Manage dynamic validation rules per form:
-- `contact_form` — Override contact form validation
-- `user_register` — Override registration validation
-- Add new forms with custom rules and error messages
-
 ### Activity Logs
 Audit trail for all model changes:
 - Filter by event (created/updated/deleted), user, date range

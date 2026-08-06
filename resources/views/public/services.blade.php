@@ -83,8 +83,8 @@
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body p-4">
                                 <i class="bi bi-gear fs-1 text-success mb-3"></i>
-                                <h5 class="fw-semibold">{{ __('Settings & Validation') }}</h5>
-                                <p class="text-muted" style="font-size: 0.875rem;">{{ __('Database-backed settings, dynamic validation rules per form, custom error messages, and grouped configuration.') }}</p>
+                                <h5 class="fw-semibold">{{ __('Settings') }}</h5>
+                                <p class="text-muted" style="font-size: 0.875rem;">{{ __('Database-backed settings with grouped configuration for general, SEO, social, and mail settings.') }}</p>
                             </div>
                         </div>
                     </div>

@@ -10,7 +10,7 @@
 - **Laravel Sanctum** for API token auth
 - **Queue**: `database` driver (via `composer dev` with `queue:listen`)
 - **Scheduler**: runs every minute via `schedule:work` (included in `composer dev`)
-- **Database**: 19 tables — PostgreSQL recommended, SQLite for dev/testing
+- **Database**: 18 tables — PostgreSQL recommended, SQLite for dev/testing
 
 ## Architecture Overview
 
@@ -79,7 +79,6 @@ All under `/admin`, prefix `admin.`, middleware: `auth, verified, role:admin, ip
 | `/users` | index/show/edit/update/destroy | `UserController` | No create — users register themselves |
 | `/contacts` | index/show/destroy | `ContactController` | Contact submissions inbox |
 | `/media` | index/store/destroy | `MediaController` | File upload & management |
-| `/validation-rules` | resource | `ValidationRuleController` | Dynamic validation rules |
 | `/settings` | index/update/store/destroy | `SettingController` | DB-backed grouped settings |
 | `/roles` | resource (no show) | `RoleController` | Role management (name, slug, description) |
 | `/tags` | resource (no show) | `TagController` | Tag CRUD with color picker |
@@ -172,11 +171,6 @@ Prefix `/api/v1`
 - **Relations**: `user()` BelongsTo(User), `auditable()` MorphTo
 - **Statics**: `log(event, model, oldValues, newValues)`
 
-### `ValidationRule`
-- **Fillable**: `form_name, rules, custom_messages`
-- **Casts**: `rules => array`, `custom_messages => array`
-- **Traits**: `HasFactory`
-- **Statics**: `getRules(formName)`, `getMessages(formName)`
 
 ---
 
@@ -191,9 +185,6 @@ Prefix `/api/v1`
 - `delete(category)` — soft delete
 - `restore(id)`, `forceDelete(id)`, `count()`
 
-### `DynamicValidationService`
-- Merges DB-stored validation rules with hardcoded rules per form name
-- Used by `ValidationRuleController`
 
 ### `FileUploadService`
 - Handles file upload, Media record creation, file type validation
@@ -257,7 +248,6 @@ Prefix `/api/v1`
 
 ### `CategoryRequest`
 - Validates name, slug (unique, alpha_dash), description, image (5MB), attachments (10MB each, max 10 files), is_active (boolean), sort_order (min:0), published_at (date), unpublish_at (date, after:published_at)
-- Merges with dynamic rules from `ValidationRule` where `form_name = 'category'`
 
 ### `ProfileUpdateRequest`
 - Validates name (max:255), email (unique, lowercase)
@@ -287,7 +277,6 @@ Prefix `/api/v1`
 | `RoleController` | CRUD (no show) | Role management (name, slug, description) |
 | `TagController` | CRUD (no show) | Color picker, polymorphic tagging |
 | `SettingController` | index/update/store/destroy | Grouped by General/SEO/Social/Mail — SMTP config, multiple from-addresses |
-| `ValidationRuleController` | CRUD | Per-form dynamic rules |
 | `MediaController` | index/store/destroy | Search, MIME filter, thumbnails |
 
 ---
@@ -330,7 +319,7 @@ Pages with full filter+stats treatment:
 
 ---
 
-## Database Migrations (19 tables)
+## Database Migrations (18 tables)
 
 1. `users` — id, name, email, password, remember_token, timestamps
 2. `cache` — key, value, expiration
@@ -342,11 +331,10 @@ Pages with full filter+stats treatment:
 8. `contacts` — id, name, email, subject, message, ip_address, status (default 'new'), timestamps
 9. `media` — polymorphic (mediable_type, mediable_id nullable), name, original_name, mime_type, size, path, disk, created_by, timestamps
 10. `settings` — id, group, key (unique), value, type, timestamps
-11. `validation_rules` — id, form_name (unique), rules (json), custom_messages (json), timestamps
-12. `tags` — id, name, slug, color, timestamps
-13. `taggables` — tag_id, taggable_id, taggable_type (pivot)
-14. `activity_logs` — id, user_id (nullable), event, auditable_type, auditable_id, old_values (json), new_values (json), ip_address, user_agent, timestamps
-15. `notifications` — id (uuid), type, notifiable_type, notifiable_id, data (json), read_at (nullable), timestamps
+11. `tags` — id, name, slug, color, timestamps
+12. `taggables` — tag_id, taggable_id, taggable_type (pivot)
+13. `activity_logs` — id, user_id (nullable), event, auditable_type, auditable_id, old_values (json), new_values (json), ip_address, user_agent, timestamps
+14. `notifications` — id (uuid), type, notifiable_type, notifiable_id, data (json), read_at (nullable), timestamps
 16. `subscribers` — id, email (unique), name (nullable), subscribed_at, unsubscribed_at (nullable), ip_address (nullable), timestamps
 17. `sessions` — id, user_id, ip_address, user_agent, payload, last_activity
 18. `cache` — key, value, expiration
@@ -361,7 +349,6 @@ Pages with full filter+stats treatment:
 - **Default user**: `user@example.com` / `password` (role: user)
 - **Categories seeded**: Technology, Business, Healthcare, Education, Finance
 - **Settings seeded**: 14 defaults across general (app name, description, email, etc.), SEO (title, description, keywords), social (Facebook, Twitter, Instagram, LinkedIn), + 9 mail settings (driver, host, port, username, password, encryption, from address/name, additional from-addresses)
-- **Validation rules seeded**: 2 forms — `contact_form` (4 fields) and `user_register` (3 fields)
 
 ---
 
@@ -402,8 +389,7 @@ Pages with full filter+stats treatment:
 1. **RBAC over single-role**: Users can have multiple roles, admin role gives full access to admin panel
 2. **DB-backed settings**: Instead of `.env` for everything, admin-configurable settings live in the DB with caching
 3. **Polymorphic media/tags/activity**: Media, tags, and activity logs use polymorphic relationships for reuse across models
-4. **Dynamic validation rules**: Admin UI allows adding/overriding validation rules per form without code changes
-5. **Soft deletes + recycle bin**: Categories use soft deletes with dedicated restore/force-delete UI
+4. **Soft deletes + recycle bin**: Categories use soft deletes with dedicated restore/force-delete UI
 6. **Scheduled publishing**: Categories can be scheduled for future publish/unpublish, processed by a cron-driven artisan command every minute
 7. **Synchronous notifications**: Contact form notifications are NOT queued (to ensure immediate in-app delivery without a running queue worker)
 8. **IP whitelist middleware**: Applied to all admin routes, supports exact IP, CIDR, and wildcard patterns

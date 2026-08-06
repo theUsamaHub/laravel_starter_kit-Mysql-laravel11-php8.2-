@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         // Seed categories
         $this->call(CategorySeeder::class);
 
-        // Seed settings and validation rules
+        // Seed settings
         $this->call(SettingsSeeder::class);
 
         // Create admin user

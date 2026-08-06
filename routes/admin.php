@@ -32,8 +32,6 @@ Route::prefix('admin')
         Route::post('/media', [\App\Http\Controllers\Admin\MediaController::class, 'store'])->name('media.store');
         Route::delete('/media/{media}', [\App\Http\Controllers\Admin\MediaController::class, 'destroy'])->name('media.destroy');
 
-        Route::resource('validation-rules', \App\Http\Controllers\Admin\ValidationRuleController::class);
-
         Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
         Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');

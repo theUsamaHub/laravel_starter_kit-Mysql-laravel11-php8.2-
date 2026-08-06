@@ -94,7 +94,7 @@ function commandPalette() {
             { name: 'Tags', url: '{{ route("admin.tags.index") }}', icon: 'bi bi-bookmark', category: 'Admin' },
             { name: 'Roles', url: '{{ route("admin.roles.index") }}', icon: 'bi bi-shield-check', category: 'Admin' },
             { name: 'Media Library', url: '{{ route("admin.media.index") }}', icon: 'bi bi-folder', category: 'Admin' },
-            { name: 'Validation Rules', url: '{{ route("admin.validation-rules.index") }}', icon: 'bi bi-shield-shaded', category: 'Admin' },
+
             { name: 'Settings', url: '{{ route("admin.settings.index") }}', icon: 'bi bi-gear', category: 'Admin' },
             { name: 'Maintenance', url: '{{ route("admin.maintenance.index") }}', icon: 'bi bi-shield-exclamation', category: 'Admin' },
             { name: 'Health Dashboard', url: '{{ route("admin.health.index") }}', icon: 'bi bi-heart-pulse', category: 'Admin' },

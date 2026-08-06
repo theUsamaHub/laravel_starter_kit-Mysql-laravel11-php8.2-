@@ -44,7 +44,7 @@
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.tags.*') ? 'active' : '' }}" href="{{ route('admin.tags.index') }}"><i class="bi bi-bookmark"></i> {{ __('Tags') }}</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}" href="{{ route('admin.roles.index') }}"><i class="bi bi-shield-check"></i> {{ __('Roles') }}</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.media.*') ? 'active' : '' }}" href="{{ route('admin.media.index') }}"><i class="bi bi-folder"></i> {{ __('Media') }}</a></li>
-                <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.validation-rules.*') ? 'active' : '' }}" href="{{ route('admin.validation-rules.index') }}"><i class="bi bi-shield-shaded"></i> {{ __('Validation Rules') }}</a></li>
+
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}"><i class="bi bi-gear"></i> {{ __('Settings') }}</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.maintenance.*') ? 'active' : '' }}" href="{{ route('admin.maintenance.index') }}"><i class="bi bi-shield-exclamation"></i> {{ __('Maintenance') }}</a></li>
                 <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.health.*') ? 'active' : '' }}" href="{{ route('admin.health.index') }}"><i class="bi bi-heart-pulse"></i> {{ __('Health') }}</a></li>

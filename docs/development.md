@@ -154,7 +154,6 @@ $user->notify(new WelcomeNotification(...)); // Implements ShouldQueue
 | `categories.count` | 3600s | Category created/updated/deleted/restored |
 | `categories.active` | 3600s | Same as above |
 | `module_registry.modules` | Forever | Never (controllers don't change at runtime) |
-| `validation_rule.{form}` | 3600s | ValidationRule saved/deleted |
 | `contacts.new_count` | 60s | Time-based |
 | `notifications.unread.{id}` | 60s | Time-based |
 | `notifications.recent.{id}` | 60s | Time-based |

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Setting;
-use App\Models\ValidationRule;
 use Illuminate\Database\Seeder;
 
 class SettingsSeeder extends Seeder
@@ -47,41 +46,6 @@ class SettingsSeeder extends Seeder
 
         foreach ($mailSettings as $setting) {
             Setting::updateOrCreate(['key' => $setting['key']], $setting);
-        }
-
-        // Default validation rules
-        $rules = [
-            [
-                'form_name' => 'contact_form',
-                'rules' => [
-                    'name' => ['required', 'string', 'max:255'],
-                    'email' => ['required', 'email', 'max:255'],
-                    'subject' => ['nullable', 'string', 'max:255'],
-                    'message' => ['required', 'string', 'max:5000'],
-                ],
-                'custom_messages' => [
-                    'name.required' => 'Please enter your name.',
-                    'email.required' => 'Please enter your email address.',
-                    'email.email' => 'Please enter a valid email address.',
-                    'message.required' => 'Please enter your message.',
-                ],
-            ],
-            [
-                'form_name' => 'user_register',
-                'rules' => [
-                    'name' => ['required', 'string', 'max:255'],
-                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                    'password' => ['required', 'string', 'min:8', 'confirmed'],
-                ],
-                'custom_messages' => null,
-            ],
-        ];
-
-        foreach ($rules as $rule) {
-            ValidationRule::updateOrCreate(
-                ['form_name' => $rule['form_name']],
-                $rule
-            );
         }
     }
 }
