@@ -28,12 +28,10 @@
 - Edit user (name, email, password, role assignment)
 - Delete user (self-deletion blocked)
 
-## Admin Panel — Roles & Permissions
-- List roles with user count
-- Create/Edit roles with auto-discovered module permissions
+## Admin Panel — Roles
+- List roles with user count and description
+- Create/Edit roles (name, slug, description)
 - Delete roles (blocked if users assigned)
-- Permissions grouped by module in UI
-- Admin auto-bypass for all permissions
 
 ## Admin Panel — Categories
 - Full CRUD with soft deletes
@@ -205,7 +203,7 @@
 - 19 tables: users, roles, role_user, categories, media, tags, taggables, contacts, settings, activity_logs, validation_rules, notifications, subscribers, sessions, cache, jobs, personal_access_tokens, failed_jobs, migrations
 - Soft deletes on categories
 - UUID primary keys on notifications
-- JSON columns for permissions, audit values, notification data
+- JSON columns for audit values, notification data
 - Polymorphic relationships (media, tags, activity logs, notifications)
 
 ## Scheduled Tasks

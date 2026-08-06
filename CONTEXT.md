@@ -20,9 +20,7 @@
 - **Rate limiting**: 5 login attempts per email+IP throttle
 
 ### Authorization (RBAC)
-- Two roles: `admin` (super-admin, bypasses all permission checks) and `user` (regular)
-- Permissions are auto-generated from admin controllers via `ModuleRegistry` — format: `module.action` (e.g., `categories.create`, `users.edit`)
-- `PermissionMiddleware`: checks if user's role has a specific permission string
+- Two roles: `admin` (super-admin, full access to admin panel) and `user` (regular)
 - `RoleMiddleware`: checks if user has a specific role slug
 - Admin routes are wrapped in `role:admin` middleware
 
@@ -83,7 +81,7 @@ All under `/admin`, prefix `admin.`, middleware: `auth, verified, role:admin, ip
 | `/media` | index/store/destroy | `MediaController` | File upload & management |
 | `/validation-rules` | resource | `ValidationRuleController` | Dynamic validation rules |
 | `/settings` | index/update/store/destroy | `SettingController` | DB-backed grouped settings |
-| `/roles` | resource (no show) | `RoleController` | Role & permission management |
+| `/roles` | resource (no show) | `RoleController` | Role management (name, slug, description) |
 | `/tags` | resource (no show) | `TagController` | Tag CRUD with color picker |
 | `/activity-logs` | index/export/destroy | `ActivityLogController` | Audit trail, CSV export |
 | `/ip-restrictions` | index/update | `IpRestrictionController` | IP whitelist management |
@@ -121,7 +119,7 @@ Prefix `/api/v1`
 ## All Models
 
 ### `User`
-- **Traits**: `HasApiTokens` (Sanctum), `HasFactory`, `Notifiable`, `HasRoles`
+- **Traits**: `HasApiTokens` (Sanctum), `HasFactory`, `Notifiable`
 - **Fillable**: `name`, `email`, `password`
 - **Hidden**: `password`, `remember_token`
 - **Casts**: `email_verified_at => datetime`, `password => hashed`
@@ -130,10 +128,9 @@ Prefix `/api/v1`
 
 ### `Role`
 - **Traits**: `LogsActivity`
-- **Fillable**: `name`, `slug`, `description`, `permissions`
-- **Cast**: `permissions => array`
+- **Fillable**: `name`, `slug`, `description`
 - **Relations**: `users()` BelongsToMany User
-- **Methods**: `hasUser()`, `hasPermission()`, `givePermission()`, `revokePermission()`
+- **Methods**: `hasUser()`
 
 ### `Category`
 - **Traits**: `HasFactory`, `SoftDeletes`, `HasMedia`, `HasTags`, `LogsActivity`
@@ -203,14 +200,14 @@ Prefix `/api/v1`
 - Constants: `FILE_TYPES` with limits (images 5MB, docs 10MB, spreadsheets 10MB)
 
 ### `ModuleRegistry`
-- Auto-discovers admin controllers, generates `module.action` permission strings
-- `getGroupedPermissions()` returns permissions grouped by module name
+- Auto-discovers admin controllers for reference (not used for access control)
+- `getGroupedPermissions()` returns permissions grouped by module name (legacy, kept for reference)
 
 ---
 
 ## All Traits
 
-### `HasRoles` (on User)
+### `HasRoles` (on User — inline, not a separate trait)
 - `roles()` BelongsToMany, `hasRole()`, `assignRole()`, `removeRole()`
 
 ### `HasMedia` (on any model)
@@ -234,7 +231,6 @@ Prefix `/api/v1`
 
 | Middleware | Alias | Purpose |
 |-----------|-------|---------|
-| `app/Middleware/CheckPermission` | `permission` | Checks specific permission string, admin bypass |
 | `app/Middleware/RoleMiddleware` | `role` | Checks role slug |
 | `app/Http/Middleware/IpRestrictionMiddleware` | `ip-restrict` | Whitelist IPs (wildcard/CIDR), allows all when whitelist empty |
 | `app/Http/Middleware/MaintenanceModeMiddleware` | — | Global, checks DB setting, allows admins + bypass routes + health check, shows 503 |
@@ -288,7 +284,7 @@ Prefix `/api/v1`
 | `IpRestrictionController` | index/update | Wildcard and CIDR support |
 | `LogViewerController` | index/clear/download | Tail last 200 lines |
 | `BackupController` | index/create/download/destroy | PostgreSQL SQL dumps (TRUNCATE + INSERT) |
-| `RoleController` | CRUD (no show) | Auto-discovered permissions from ModuleRegistry |
+| `RoleController` | CRUD (no show) | Role management (name, slug, description) |
 | `TagController` | CRUD (no show) | Color picker, polymorphic tagging |
 | `SettingController` | index/update/store/destroy | Grouped by General/SEO/Social/Mail — SMTP config, multiple from-addresses |
 | `ValidationRuleController` | CRUD | Per-form dynamic rules |
@@ -339,7 +335,7 @@ Pages with full filter+stats treatment:
 1. `users` — id, name, email, password, remember_token, timestamps
 2. `cache` — key, value, expiration
 3. `jobs` — id, queue, payload, attempts, reserved_at, available_at, created_at
-4. `roles` — id, name, slug, description, permissions (json), timestamps
+4. `roles` — id, name, slug, description, permissions (json, legacy/unused), timestamps
 5. `role_user` — user_id, role_id (pivot)
 6. `categories` — id, name, slug, description, body, image, is_active (default true), sort_order, published_at (nullable), unpublish_at (nullable), created_by, updated_by, timestamps, soft_deletes
 7. `personal_access_tokens` — Sanctum tokens
@@ -403,7 +399,7 @@ Pages with full filter+stats treatment:
 
 ## Key Architectural Decisions
 
-1. **RBAC over single-role**: Users can have multiple roles, each with granular permissions stored as JSON in the roles table
+1. **RBAC over single-role**: Users can have multiple roles, admin role gives full access to admin panel
 2. **DB-backed settings**: Instead of `.env` for everything, admin-configurable settings live in the DB with caching
 3. **Polymorphic media/tags/activity**: Media, tags, and activity logs use polymorphic relationships for reuse across models
 4. **Dynamic validation rules**: Admin UI allows adding/overriding validation rules per form without code changes
@@ -425,7 +421,6 @@ Pages with full filter+stats treatment:
 5. Add route in `routes/admin.php`
 6. Create views in `resources/views/admin/{name}/`
 7. Add sidebar link in `layouts/sidebar.blade.php`
-8. Register permissions in `ModuleRegistry` if needed
 
 **Adding a public page**:
 1. Create view in `resources/views/public/`

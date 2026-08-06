@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
-use App\Services\ModuleRegistry;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,16 +13,13 @@ class RoleController extends Controller
     public function index(): View
     {
         $roles = Role::withCount('users')->get();
-        $modules = ModuleRegistry::discoverModules();
 
-        return view('admin.roles.index', compact('roles', 'modules'));
+        return view('admin.roles.index', compact('roles'));
     }
 
     public function create(): View
     {
-        return view('admin.roles.create', [
-            'permissions' => ModuleRegistry::getGroupedPermissions(),
-        ]);
+        return view('admin.roles.create');
     }
 
     public function store(Request $request): RedirectResponse
@@ -32,14 +28,12 @@ class RoleController extends Controller
             'name' => ['required', 'string', 'max:255', 'unique:roles,name'],
             'slug' => ['required', 'string', 'max:255', 'unique:roles,slug'],
             'description' => ['nullable', 'string', 'max:500'],
-            'permissions' => ['nullable', 'array'],
         ]);
 
         Role::create([
             'name' => $validated['name'],
             'slug' => $validated['slug'],
             'description' => $validated['description'] ?? null,
-            'permissions' => $validated['permissions'] ?? [],
         ]);
 
         return redirect()->route('admin.roles.index')
@@ -48,10 +42,7 @@ class RoleController extends Controller
 
     public function edit(Role $role): View
     {
-        return view('admin.roles.edit', [
-            'role' => $role,
-            'permissions' => ModuleRegistry::getGroupedPermissions(),
-        ]);
+        return view('admin.roles.edit', ['role' => $role]);
     }
 
     public function update(Request $request, Role $role): RedirectResponse
@@ -59,13 +50,11 @@ class RoleController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:roles,name,' . $role->id],
             'description' => ['nullable', 'string', 'max:500'],
-            'permissions' => ['nullable', 'array'],
         ]);
 
         $role->update([
             'name' => $validated['name'],
             'description' => $validated['description'] ?? null,
-            'permissions' => $validated['permissions'] ?? [],
         ]);
 
         return redirect()->route('admin.roles.index')
