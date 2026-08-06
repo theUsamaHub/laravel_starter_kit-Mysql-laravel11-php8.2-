@@ -83,57 +83,25 @@ function commandPalette() {
         pages: [
             { name: 'Dashboard', url: '{{ route("dashboard") }}', icon: 'bi bi-grid-1x2', category: 'General' },
             { name: 'Profile', url: '{{ route("profile.edit") }}', icon: 'bi bi-person', category: 'General' },
-            @if(auth()->user()->hasPermission('category.view'))
+            @if(auth()->user()->hasRole('admin'))
             { name: 'Admin Dashboard', url: '{{ route("admin.dashboard") }}', icon: 'bi bi-speedometer2', category: 'Admin' },
             { name: 'Categories', url: '{{ route("admin.categories.index") }}', icon: 'bi bi-tags', category: 'Admin' },
             { name: 'Recycle Bin', url: '{{ route("admin.categories.trashed") }}', icon: 'bi bi-trash', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('user.view'))
             { name: 'Users', url: '{{ route("admin.users.index") }}', icon: 'bi bi-people', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('contact.view'))
             { name: 'Contacts', url: '{{ route("admin.contacts.index") }}', icon: 'bi bi-envelope', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('tag.view'))
             { name: 'Tags', url: '{{ route("admin.tags.index") }}', icon: 'bi bi-bookmark', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('role.view'))
             { name: 'Roles', url: '{{ route("admin.roles.index") }}', icon: 'bi bi-shield-check', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('media.view'))
             { name: 'Media Library', url: '{{ route("admin.media.index") }}', icon: 'bi bi-folder', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('validation_rule.view'))
             { name: 'Validation Rules', url: '{{ route("admin.validation-rules.index") }}', icon: 'bi bi-shield-shaded', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('setting.view'))
             { name: 'Settings', url: '{{ route("admin.settings.index") }}', icon: 'bi bi-gear', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('maintenance.view'))
             { name: 'Maintenance', url: '{{ route("admin.maintenance.index") }}', icon: 'bi bi-shield-exclamation', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('health.view'))
             { name: 'Health Dashboard', url: '{{ route("admin.health.index") }}', icon: 'bi bi-heart-pulse', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('ip_restriction.view'))
             { name: 'IP Restrictions', url: '{{ route("admin.ip-restrictions.index") }}', icon: 'bi bi-shield-lock', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('subscriber.view'))
             { name: 'Subscribers', url: '{{ route("admin.subscribers.index") }}', icon: 'bi bi-envelope-paper', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('notification.view'))
             { name: 'Notifications', url: '{{ route("admin.notifications.index") }}', icon: 'bi bi-bell', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('sessions.view'))
             { name: 'Sessions', url: '{{ route("admin.sessions.index") }}', icon: 'bi bi-person-badge', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('activity.view'))
             { name: 'Activity Logs', url: '{{ route("admin.activity-logs.index") }}', icon: 'bi bi-clock-history', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('logs.view'))
             { name: 'Log Viewer', url: '{{ route("admin.logs.index") }}', icon: 'bi bi-journal-text', category: 'Admin' },
-            @endif
-            @if(auth()->user()->hasPermission('backup.view'))
             { name: 'Backups', url: '{{ route("admin.backup.index") }}', icon: 'bi bi-database', category: 'Admin' },
             @endif
         ],
