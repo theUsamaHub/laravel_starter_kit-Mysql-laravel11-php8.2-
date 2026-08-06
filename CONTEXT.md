@@ -335,7 +335,7 @@ Pages with full filter+stats treatment:
 1. `users` — id, name, email, password, remember_token, timestamps
 2. `cache` — key, value, expiration
 3. `jobs` — id, queue, payload, attempts, reserved_at, available_at, created_at
-4. `roles` — id, name, slug, description, permissions (json, legacy/unused), timestamps
+4. `roles` — id, name, slug, description, timestamps
 5. `role_user` — user_id, role_id (pivot)
 6. `categories` — id, name, slug, description, body, image, is_active (default true), sort_order, published_at (nullable), unpublish_at (nullable), created_by, updated_by, timestamps, soft_deletes
 7. `personal_access_tokens` — Sanctum tokens
