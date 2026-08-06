@@ -83,9 +83,11 @@ function commandPalette() {
         pages: [
             { name: 'Dashboard', url: '{{ route("dashboard") }}', icon: 'bi bi-grid-1x2', category: 'General' },
             { name: 'Profile', url: '{{ route("profile.edit") }}', icon: 'bi bi-person', category: 'General' },
+            @if(auth()->user()->hasAnyRole(['admin', 'user']))
+            { name: 'Categories', url: '{{ route("admin.categories.index") }}', icon: 'bi bi-tags', category: 'Browse' },
+            @endif
             @if(auth()->user()->hasRole('admin'))
             { name: 'Admin Dashboard', url: '{{ route("admin.dashboard") }}', icon: 'bi bi-speedometer2', category: 'Admin' },
-            { name: 'Categories', url: '{{ route("admin.categories.index") }}', icon: 'bi bi-tags', category: 'Admin' },
             { name: 'Recycle Bin', url: '{{ route("admin.categories.trashed") }}', icon: 'bi bi-trash', category: 'Admin' },
             { name: 'Users', url: '{{ route("admin.users.index") }}', icon: 'bi bi-people', category: 'Admin' },
             { name: 'Contacts', url: '{{ route("admin.contacts.index") }}', icon: 'bi bi-envelope', category: 'Admin' },

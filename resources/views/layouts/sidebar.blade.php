@@ -19,6 +19,13 @@
                 </a>
             </li>
 
+            @if(auth()->check() && auth()->user()->hasAnyRole(['admin', 'user']))
+                <li class="nav-item mt-2">
+                    <small class="text-uppercase text-secondary px-3 fw-semibold" style="font-size:0.7rem;letter-spacing:0.05em;">{{ __('Browse') }}</small>
+                </li>
+                <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.categories.index') || request()->routeIs('admin.categories.show') ? 'active' : '' }}" href="{{ route('admin.categories.index') }}"><i class="bi bi-tags"></i> {{ __('Categories') }}</a></li>
+            @endif
+
             @if(auth()->check() && auth()->user()->hasRole('admin'))
                 <li class="nav-item mt-2">
                     <small class="text-uppercase text-secondary px-3 fw-semibold" style="font-size:0.7rem;letter-spacing:0.05em;">{{ __('Administration') }}</small>

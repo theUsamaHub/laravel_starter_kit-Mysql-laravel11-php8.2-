@@ -2,6 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
+// User-accessible routes (admin + user roles can view categories)
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'verified', 'role:admin,user', 'ip-restrict'])
+    ->group(function () {
+        Route::get('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'show'])->name('categories.show');
+    });
+
+// Admin-only routes
 Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', 'verified', 'role:admin', 'ip-restrict'])
@@ -12,7 +22,7 @@ Route::prefix('admin')
         Route::get('/categories/trashed', [\App\Http\Controllers\Admin\CategoryController::class, 'trashed'])->name('categories.trashed');
         Route::post('/categories/{id}/restore', [\App\Http\Controllers\Admin\CategoryController::class, 'restore'])->name('categories.restore')->withTrashed();
         Route::delete('/categories/{id}/force-delete', [\App\Http\Controllers\Admin\CategoryController::class, 'forceDelete'])->name('categories.force-delete')->withTrashed();
-        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->except(['index', 'show']);
 
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->only(['index', 'show', 'edit', 'update', 'destroy']);
 
