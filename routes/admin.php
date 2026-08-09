@@ -8,7 +8,7 @@ Route::prefix('admin')
     ->middleware(['auth', 'verified', 'role:admin,user', 'ip-restrict'])
     ->group(function () {
         Route::get('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('categories.index');
-        Route::get('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'show'])->name('categories.show');
+        Route::get('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'show'])->name('categories.show')->whereNumber('category');
     });
 
 // Admin-only routes
