@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Category;
-use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -46,10 +45,6 @@ class CategoryService
 
     public function create(array $data): Category
     {
-        if (!empty($data['published_at']) && Carbon::parse($data['published_at'])->isFuture()) {
-            $data['is_active'] = false;
-        }
-
         $category = Category::create($data);
         $this->refreshCache();
         return $category;
@@ -57,10 +52,6 @@ class CategoryService
 
     public function update(Category $category, array $data): Category
     {
-        if (!empty($data['published_at']) && Carbon::parse($data['published_at'])->isFuture()) {
-            $data['is_active'] = false;
-        }
-
         $category->update($data);
         $this->refreshCache();
         return $category->fresh();

@@ -60,11 +60,7 @@
                                 <td class="fw-medium">{{ $category->name }}</td>
                                 <td><code>{{ $category->slug }}</code></td>
                                 <td>
-                                    @if ($category->published_at && $category->published_at->isFuture())
-                                        <span class="badge bg-info">{{ __('Scheduled') }}</span>
-                                    @elseif ($category->unpublish_at && $category->unpublish_at->isPast())
-                                        <span class="badge bg-warning text-dark">{{ __('Expired') }}</span>
-                                    @elseif ($category->is_active)
+                                    @if ($category->is_active)
                                         <span class="badge bg-success">{{ __('Active') }}</span>
                                     @else
                                         <span class="badge bg-secondary">{{ __('Inactive') }}</span>
