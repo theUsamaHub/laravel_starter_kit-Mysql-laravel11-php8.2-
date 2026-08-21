@@ -44,7 +44,7 @@ See the [docs/](docs/) folder for complete guides:
 
 ## Tech Stack
 
-- **Laravel 13** — PHP 8.3+
+- **Laravel 11** — PHP 8.2
 - **Bootstrap 5.3** + **Bootstrap Icons** — SCSS build via Vite
 - **Alpine.js** — Frontend interactivity
 - **Vite 8** — Build tool with HMR
