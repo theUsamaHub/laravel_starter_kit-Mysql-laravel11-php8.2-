@@ -9,7 +9,11 @@ class Role extends Model
 {
     use \App\Traits\LogsActivity;
 
-    protected $fillable = ['name', 'slug', 'description'];
+    protected $fillable = ['name', 'slug', 'description', 'permissions'];
+
+    protected $casts = [
+        'permissions' => 'array',
+    ];
 
     public function users(): BelongsToMany
     {
